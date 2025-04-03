@@ -2,7 +2,7 @@ import { Navbar } from "@/components/navbar";
 
 /**
  * The default layout for the application.
- * @param {string} page The name of the page to highlight on the navbar. 
+ * @param {string} page The name of the page to highlight on the navbar.
  * @param {React.ReactNode} children The content to be displayed within the layout.
  */
 function Layout({

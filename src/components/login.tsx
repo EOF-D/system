@@ -20,14 +20,10 @@ import { FC, FormEvent, useEffect, useState } from "react";
  * @param {string} defaultTab The default tab to display when the modal opens. Can be "login" or "sign-up".
  */
 export const LoginModal: FC<{
-  isOpen: boolean,
+  isOpen: boolean;
   onOpenChange: ModalProps["onOpenChange"];
   defaultTab?: "login" | "sign-up";
-}> = ({
-  isOpen,
-  onOpenChange,
-  defaultTab = "login",
-}) => {
+}> = ({ isOpen, onOpenChange, defaultTab = "login" }) => {
   // State to manage the selected tab and form fields.
   const [selected, setSelected] = useState(defaultTab);
 
@@ -62,7 +58,7 @@ export const LoginModal: FC<{
   // Validate email domain.
   const validateEmail = (
     emailValue: string,
-    setError: (error: string) => void,
+    setError: (error: string) => void
   ) => {
     if (!emailValue) {
       setError("Email is required");
@@ -75,7 +71,7 @@ export const LoginModal: FC<{
 
     if (!domain || !validDomains.includes(domain)) {
       setError(
-        "Email must be from champlain.edu or mymail.champlain.edu domain",
+        "Email must be from champlain.edu or mymail.champlain.edu domain"
       );
 
       return false;
@@ -229,7 +225,9 @@ export const LoginModal: FC<{
                   <Tabs
                     fullWidth
                     selectedKey={selected}
-                    onSelectionChange={(key) => setSelected(key as "login" | "sign-up")}
+                    onSelectionChange={(key) =>
+                      setSelected(key as "login" | "sign-up")
+                    }
                     size="md"
                   >
                     <Tab key="login" title="Login">
