@@ -1,8 +1,8 @@
+import { Switch } from "@heroui/react";
+import { useTheme } from "@heroui/use-theme";
 import { useEffect, useState } from "react";
-import { useTheme } from "@heroui/use-theme"
-import { Switch} from "@heroui/react";
 
-import { IconBrightnessDownFilled, IconBrightnessDown } from '@tabler/icons-react';
+import { IconBrightnessDown, IconBrightnessDownFilled } from '@tabler/icons-react';
 
 /**
  * A component that allows users to switch between light and dark themes.

@@ -1,10 +1,10 @@
-import { FC } from "react";
 import {
   Navbar as HeroNavbar,
+  Link,
   NavbarContent,
   NavbarItem,
-  Link,
 } from "@heroui/react";
+import { FC } from "react";
 
 import { ThemeSwitcher } from "@/components/switch";
 

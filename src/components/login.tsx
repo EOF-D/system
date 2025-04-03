@@ -1,17 +1,17 @@
-import { FC, useState, useEffect, FormEvent } from "react";
 import {
-  Modal,
-  ModalContent,
-  ModalBody,
-  Tabs,
-  Tab,
-  Input,
-  Link,
   Button,
   Card,
   CardBody,
+  Input,
+  Link,
+  Modal,
+  ModalBody,
+  ModalContent,
   ModalProps,
+  Tab,
+  Tabs,
 } from "@heroui/react";
+import { FC, FormEvent, useEffect, useState } from "react";
 
 /**
  * A modal component for user login and sign-up.

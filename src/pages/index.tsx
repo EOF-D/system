@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { button as buttonStyles } from "@heroui/theme";
 import { Button, useDisclosure } from "@heroui/react";
+import { button as buttonStyles } from "@heroui/theme";
+import { useState } from "react";
 
-import Layout from "@/layouts/default";
 import LoginModal from "@/components/login";
+import Layout from "@/layouts/default";
 
 /**
  * The index page for the application.
