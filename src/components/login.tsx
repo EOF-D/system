@@ -218,7 +218,7 @@ export const LoginModal: FC<{
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       placement="center"
-      size="lg"
+      size="sm"
     >
       <ModalContent>
         {() => (
