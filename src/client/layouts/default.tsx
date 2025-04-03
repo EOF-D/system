@@ -1,4 +1,4 @@
-import { Navbar } from "@/components/navbar";
+import { Navbar } from "@/client/components/navbar";
 
 /**
  * The default layout for the application.

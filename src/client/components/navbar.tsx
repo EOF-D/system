@@ -6,7 +6,7 @@ import {
 } from "@heroui/react";
 import { FC } from "react";
 
-import { ThemeSwitcher } from "@/components/switch";
+import { ThemeSwitcher } from "@/client/components/switch";
 
 /**
  * A navbar component that displays navigation links and a theme switcher.

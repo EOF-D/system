@@ -1,4 +1,4 @@
-import IndexPage from "@/pages/index";
+import IndexPage from "@/client/pages/index";
 import { Route, Routes } from "react-router-dom";
 
 /**
