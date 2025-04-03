@@ -41,7 +41,7 @@ function IndexPage() {
             className={buttonStyles({
               color: "primary",
               radius: "full",
-              variant: "shadow",
+              variant: "solid",
             })}
             onPress={handleOpenLoginModal}
           >
