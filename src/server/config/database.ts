@@ -1,3 +1,4 @@
+import fs from "fs";
 import path from "path";
 import { open } from "sqlite";
 import sqlite3 from "sqlite3";
@@ -18,6 +19,12 @@ const dbConfig = {
  * @returns {Promise<sqlite3.Database>} A promise that resolves to the SQLite database connection.
  */
 export async function getDb() {
+  // Check if the database file exists, if not create it.
+  if (!fs.existsSync(dbConfig.filename)) {
+    fs.mkdirSync(path.dirname(dbConfig.filename), { recursive: true });
+    fs.writeFileSync(dbConfig.filename, "");
+  }
+
   return open(dbConfig);
 }
 
