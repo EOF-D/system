@@ -10,7 +10,6 @@ import { useAuth } from "@/client/context/auth";
 function ProfilePage() {
   // Get the auth context to check if the user is logged in.
   const { user, isLoggedIn } = useAuth();
-  console.log(user);
 
   return (
     <Layout page="Home">
