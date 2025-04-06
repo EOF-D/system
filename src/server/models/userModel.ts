@@ -58,7 +58,6 @@ export interface CreateUserInput {
   /**
    * Password of the user.
    */
-
   password: string;
 
   /**
