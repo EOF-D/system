@@ -1,13 +1,5 @@
 import { User } from "@heroui/react";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Divider,
-  Link,
-  Image,
-} from "@heroui/react";
+import { Card, CardHeader, CardBody, CardFooter, Divider } from "@heroui/react";
 
 import Layout from "@/client/layouts/default";
 import { useAuth } from "@/client/context/auth";
