@@ -6,6 +6,7 @@ coverage/
 
 # production
 build/
+src/server/data/database.sqlite
 
 # misc
 .DS_Store

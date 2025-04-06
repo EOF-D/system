@@ -35,7 +35,6 @@ function IndexPage() {
             A simple and lightweight learning management system.
           </div>
         </div>
-
         <div className="flex gap-3">
           <Button
             className={buttonStyles({
