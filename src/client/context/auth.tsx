@@ -35,6 +35,16 @@ interface User {
    * The role of the user.
    */
   role: string;
+
+  /**
+   * The creation date of the user.
+   */
+  created_at: string;
+
+  /**
+   * The last update date of the user.
+   */
+  updated_at: string;
 }
 
 /**

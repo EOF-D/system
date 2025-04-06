@@ -1,4 +1,5 @@
 import IndexPage from "@/client/pages/index";
+import ProfilePage from "@/client/pages/profile";
 import { Route, Routes } from "react-router-dom";
 
 /**
@@ -8,6 +9,7 @@ function App() {
   return (
     <Routes>
       <Route element={<IndexPage />} path="/" />
+      <Route element={<ProfilePage />} path="/profile" />
     </Routes>
   );
 }
