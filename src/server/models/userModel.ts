@@ -257,7 +257,11 @@ export class UserModel {
     }
   }
 
-  // Delete user
+  /**
+   * Delete a user from the database.
+   * @param {number} id - The ID of the user to delete.
+   * @returns {Promise<boolean>} True if the user was deleted, false otherwise.
+   */
   static async delete(id: number): Promise<boolean> {
     const db = await getDb();
     try {
@@ -268,7 +272,12 @@ export class UserModel {
     }
   }
 
-  // Compare password for login
+  /**
+   * Compare a plain text password with a hashed password.
+   * @param {string} password - The plain text password to compare.
+   * @param {string} hashedPassword - The hashed password to compare against.
+   * @returns {Promise<boolean>} True if the passwords match, false otherwise.
+   */
   static async comparePassword(
     password: string,
     hashedPassword: string
