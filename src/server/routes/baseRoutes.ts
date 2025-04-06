@@ -1,4 +1,4 @@
-import { Router, Response } from "express";
+import { Response, Router } from "express";
 
 // This is the base router for the server.
 const baseRouter = Router();
