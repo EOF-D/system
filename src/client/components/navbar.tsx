@@ -28,22 +28,40 @@ export const Navbar: FC<{ activePage: string }> = ({ activePage }) => {
           </Link>
         </NavbarItem>
         <NavbarItem isActive={activePage === "Profile"}>
-          <Link color="foreground" href="/profile" underline="always">
+          <Link
+            color="foreground"
+            href="/profile"
+            underline="always"
+            isDisabled={!isLoggedIn}
+          >
             Profile
           </Link>
         </NavbarItem>
         <NavbarItem isActive={activePage === "Calendar"}>
-          <Link color="foreground" href="/calendar" underline="always">
+          <Link
+            color="foreground"
+            href="/calendar"
+            underline="always"
+            isDisabled={!isLoggedIn}
+          >
             Calendar
           </Link>
         </NavbarItem>
         <NavbarItem isActive={activePage === "Dashboard"}>
-          <Link color="foreground" href="/dashboard" underline="always">
+          <Link
+            color="foreground"
+            href="/dashboard"
+            underline="always"
+            isDisabled={!isLoggedIn}
+          >
             Dashboard
           </Link>
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
+        <NavbarItem>
+          <ThemeSwitcher />
+        </NavbarItem>
         <NavbarItem>
           {isLoggedIn && (
             <Button
@@ -58,9 +76,6 @@ export const Navbar: FC<{ activePage: string }> = ({ activePage }) => {
               Logout
             </Button>
           )}
-        </NavbarItem>
-        <NavbarItem>
-          <ThemeSwitcher />
         </NavbarItem>
       </NavbarContent>
     </HeroNavbar>
