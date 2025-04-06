@@ -1,7 +1,9 @@
 import { Button, useDisclosure } from "@heroui/react";
 import { button as buttonStyles } from "@heroui/theme";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
+import { useAuth } from "@/client/context/auth";
 import LoginModal from "@/client/components/login";
 import Layout from "@/client/layouts/default";
 
@@ -9,6 +11,9 @@ import Layout from "@/client/layouts/default";
  * The index page for the application.
  */
 function IndexPage() {
+  // Get the auth context to handle authentication and user state.
+  const { isLoggedIn, logout } = useAuth();
+
   // State to manage the modal's open state and the active tab.
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -35,18 +40,32 @@ function IndexPage() {
             A simple and lightweight learning management system.
           </div>
         </div>
-
         <div className="flex gap-3">
-          <Button
-            className={buttonStyles({
-              color: "primary",
-              radius: "full",
-              variant: "solid",
-            })}
-            onPress={handleOpenLoginModal}
-          >
-            Login
-          </Button>
+          {!isLoggedIn && (
+            <Button
+              className={buttonStyles({
+                color: "primary",
+                radius: "full",
+                variant: "solid",
+              })}
+              onPress={handleOpenLoginModal}
+            >
+              Login
+            </Button>
+          )}
+          {isLoggedIn && (
+            <Button
+              className={buttonStyles({
+                color: "primary",
+                radius: "full",
+                variant: "solid",
+              })}
+              onPress={logout}
+            >
+              Logout
+            </Button>
+          )}
+
           <Button
             className={buttonStyles({
               color: "primary",
