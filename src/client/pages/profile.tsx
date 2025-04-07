@@ -176,18 +176,10 @@ function ProfilePage() {
           <div>
             <Tabs>
               <Tab key="created_at" title="Created at">
-                <Card>
-                  <CardBody>
-                    <Calendar value={handleDate(user!.created_at)} />
-                  </CardBody>
-                </Card>
+                <Calendar value={handleDate(user!.created_at)} />
               </Tab>
               <Tab key="updated_at" title="Updated at">
-                <Card>
-                  <CardBody>
-                    <Calendar value={handleDate(user!.updated_at)} />
-                  </CardBody>
-                </Card>
+                <Calendar value={handleDate(user!.updated_at)} />
               </Tab>
             </Tabs>
           </div>
