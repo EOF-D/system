@@ -165,7 +165,7 @@ export const LoginModal: FC<{
         });
 
         if (response.success) {
-          console.log("[Sign up successful");
+          console.log("Sign up successful");
           if (onSuccess) onSuccess();
 
           setSelected("login");
