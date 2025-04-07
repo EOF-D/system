@@ -14,4 +14,9 @@ export default defineConfig({
     },
     port: 3001,
   },
+  resolve: {
+    alias: {
+      "@tabler/icons-react": "@tabler/icons-react/dist/esm/icons/index.mjs",
+    },
+  },
 });
