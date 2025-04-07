@@ -1,7 +1,7 @@
 import { Button, useDisclosure } from "@heroui/react";
 import { button as buttonStyles } from "@heroui/theme";
 import { useState } from "react";
-
+import { useAuth } from "@/client/context/auth";
 import LoginModal from "@/client/components/login";
 import Layout from "@/client/layouts/default";
 
@@ -14,6 +14,9 @@ function IndexPage() {
 
   // State to manage the active tab in the modal.
   const [activeTab, setActiveTab] = useState<"login" | "sign-up">("login");
+
+  // State to manage the authentication status.
+  const { isLoggedIn } = useAuth();
 
   // Function to handle opening the modal with specific tab.
   const handleOpenLoginModal = () => {
@@ -38,11 +41,12 @@ function IndexPage() {
         <div className="flex gap-3">
           <Button
             className={buttonStyles({
-              color: "primary",
+              color: isLoggedIn ? "default" : "primary",
               radius: "full",
               variant: "solid",
             })}
             onPress={handleOpenLoginModal}
+            disabled={isLoggedIn}
           >
             Login
           </Button>
