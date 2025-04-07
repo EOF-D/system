@@ -230,6 +230,7 @@ export class UserModel {
         // Hash the new password before storing it.
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(updateData.password, salt);
+
         query += "password = ?, ";
         values.push(hashedPassword);
       }

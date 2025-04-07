@@ -1,11 +1,11 @@
 import { useAuth } from "@/client/context/auth";
 import Layout from "@/client/layouts/default";
+import { updateUser } from "@/client/services/authService";
 import {
   Button,
   Calendar,
   Card,
   CardBody,
-  CardFooter,
   CardHeader,
   Divider,
   Input,
@@ -15,21 +15,56 @@ import {
 } from "@heroui/react";
 import { parseDate } from "@internationalized/date";
 import { IconPencil } from "@tabler/icons-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 /**
  * The profile page for the application.
  */
 function ProfilePage() {
   // Get the auth context to check if the user is logged in.
-  const { user, isLoggedIn } = useAuth();
+  const { user, isLoggedIn, refreshUser } = useAuth();
 
   // State to manage editing the profile.
   const [isEditing, setIsEditing] = useState(false);
 
+  // State to manage form data.
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    role: "user",
+  });
+
+  // Set initial form data when the user is logged in.
+  useEffect(() => {
+    if (user && isLoggedIn) {
+      setFormData({
+        name: user.name,
+        email: user.email,
+        password: "********", // Placeholder.
+        role: user.role || "user",
+      });
+    }
+  }, [user, isLoggedIn]);
+
+  // Handle input changes.
+  const handleInputChange = (field: string, value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
   // Handles save button.
-  const handleSave = () => {
-    // TODO: Implement save functionality.
+  const handleSave = async () => {
+    // Update user data with the form data.
+    const response = await updateUser(formData);
+    if (response.success) {
+      // Refresh user data after successful update.
+      refreshUser();
+    } else {
+      console.error("Error updating user:", response.message);
+    }
 
     setIsEditing(false);
   };
@@ -37,13 +72,13 @@ function ProfilePage() {
   // Function to handle date parsing.
   const handleDate = (date: string) => {
     if (!date) return null;
-
     const [datePart, _] = date.split(" ");
+
     return parseDate(datePart);
   };
 
   // Early return if user is not logged in.
-  if (!isLoggedIn) {
+  if (!isLoggedIn && !user) {
     return (
       <Layout page="Home">
         <div className="flex justify-center items-center w-full h-64">
@@ -69,7 +104,7 @@ function ProfilePage() {
                       size="sm"
                       isIconOnly
                       startContent={<IconPencil />}
-                      onPress={() => setIsEditing(!isEditing)}
+                      onPress={() => setIsEditing(true)}
                     ></Button>
                   ) : (
                     <div className="flex gap-2">
@@ -85,7 +120,18 @@ function ProfilePage() {
                         size="sm"
                         variant="bordered"
                         color="danger"
-                        onPress={() => setIsEditing(!isEditing)}
+                        onPress={() => {
+                          // Reset form data when cancelling.
+                          if (user) {
+                            setFormData({
+                              name: user.name || "",
+                              email: user.email || "",
+                              password: "********",
+                              role: user.role || "user",
+                            });
+                          }
+                          setIsEditing(false);
+                        }}
                       >
                         Cancel
                       </Button>
@@ -98,25 +144,30 @@ function ProfilePage() {
                 <div className="flex flex-col gap-4">
                   <Input
                     label="Name"
-                    defaultValue={!isEditing ? user!.name : ""}
+                    value={formData.name}
                     placeholder="New name"
                     isReadOnly={!isEditing}
                     variant="underlined"
+                    onValueChange={(value) => handleInputChange("name", value)}
                   />
                   <Input
                     label="Email"
-                    defaultValue={!isEditing ? user!.email : ""}
+                    value={formData.email}
                     placeholder="New email"
                     isReadOnly={!isEditing}
                     variant="underlined"
+                    onValueChange={(value) => handleInputChange("email", value)}
                   />
                   <Input
                     label="Password"
                     type="password"
-                    defaultValue={!isEditing ? "********" : ""}
+                    value={formData.password}
                     placeholder="New password"
                     isReadOnly={!isEditing}
                     variant="underlined"
+                    onValueChange={(value) =>
+                      handleInputChange("password", value)
+                    }
                   />
                 </div>
               </CardBody>

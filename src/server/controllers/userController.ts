@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 import { StringValue } from "ms";
 import { Config } from "../config/config";
 import { UserModel } from "../models/userModel";
@@ -120,6 +121,8 @@ export const createUser = async (req: Request, res: Response) => {
  * @access Admin or Private (for own profile)
  */
 export const updateUser = async (req: Request, res: Response) => {
+  let updateSelf: boolean = false;
+
   if (!req.user) {
     res.status(401).json({ success: false, message: "Not authorized" });
     return;
@@ -136,6 +139,7 @@ export const updateUser = async (req: Request, res: Response) => {
     } else {
       // Updating own profile.
       userId = req.user.id;
+      updateSelf = true;
     }
 
     const { name, email, password, role } = req.body;
@@ -156,7 +160,23 @@ export const updateUser = async (req: Request, res: Response) => {
 
     // Update the user.
     const updatedUser = await UserModel.update(userId, updateData);
-    res.status(200).json({ success: true, data: updatedUser });
+    if (!updatedUser) {
+      res
+        .status(500)
+        .json({ success: false, message: "Failed to update user" });
+      return;
+    }
+
+    // Generate a new token if the user is updating their own profile.
+    let data = { ...updatedUser, token: "" };
+    if (updateSelf) {
+      data = {
+        ...data,
+        token: generateToken(updatedUser.id, updatedUser.role),
+      };
+    }
+
+    res.status(200).json({ success: true, data: data });
   } catch (error) {
     console.error("Error updating user:", error);
     res.status(500).json({ success: false, message: "Server error" });

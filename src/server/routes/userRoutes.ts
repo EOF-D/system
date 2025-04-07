@@ -42,7 +42,7 @@ userRouter.get("/profile", getUserProfile);
  * @desc    Update current user's profile.
  * @access  Private
  */
-userRouter.put("/profile", updateUser);
+userRouter.put("/", updateUser);
 
 // Admin only routes.
 userRouter.use(adminOnly);

@@ -37,6 +37,31 @@ interface SignUpData {
 }
 
 /**
+ * User update data interface.
+ */
+interface UserUpdateData {
+  /**
+   * New user name.
+   */
+  name: string;
+
+  /**
+   * New user email.
+   */
+  email: string;
+
+  /**
+   * New user password.
+   */
+  password: string;
+
+  /**
+   * New user role.
+   */
+  role: string;
+}
+
+/**
  * Authentication response interface.
  */
 interface AuthResponse {
@@ -68,6 +93,16 @@ interface AuthResponse {
      * User role.
      */
     role: string;
+
+    /**
+     * User created date.
+     */
+    created_at: string;
+
+    /**
+     * User updated date.
+     */
+    updated_at: string;
 
     /**
      * User created date.
@@ -147,6 +182,43 @@ export const signUp = async (userData: SignUpData): Promise<AuthResponse> => {
     return {
       success: false,
       message: "Network error. Please try again later.",
+    };
+  }
+};
+
+/**
+ * Update user data.
+ * @param {UserUpdateData} userData - User data to update.
+ * @returns {Promise<AuthResponse>} Promise with the update response.
+ */
+export const updateUser = async (
+  userData: UserUpdateData
+): Promise<AuthResponse> => {
+  try {
+    // Send a request to the API to register the user.
+    const response = await fetch(API_URL, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify(userData),
+    });
+
+    const data = await response.json();
+
+    // Store token if update was successful.
+    if (data.success) {
+      localStorage.setItem("token", data.data.token);
+      localStorage.setItem("user", JSON.stringify(data.data));
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Update error:", error);
+    return {
+      success: false,
+      message: "Server error. Please try again later.",
     };
   }
 };
