@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
 import { StringValue } from "ms";
 import { Config } from "../config/config";
 import { UserModel } from "../models/userModel";
