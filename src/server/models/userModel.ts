@@ -389,7 +389,12 @@ export class UserModel {
       }
 
       if (hasUserUpdates) {
-        userQuery += "updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+        // Remove trailing comma if present.
+        if (userQuery.endsWith(", ")) {
+          userQuery = userQuery.slice(0, -2);
+        }
+
+        userQuery += " WHERE id = ?";
         userValues.push(id);
 
         await db.run(userQuery, userValues);
