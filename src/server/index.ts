@@ -7,6 +7,7 @@ import { initializeDatabase } from "./config/database";
 import router from "./routes/baseRoutes";
 import userRouter from "./routes/userRoutes";
 import enrollmentRouter from "./routes/enrollmentRoutes";
+import courseRouter from "./routes/courseRoutes";
 
 const app = express();
 const port = Config.port;
@@ -20,6 +21,7 @@ app.use(morgan("dev")); // For logging.
 app.use(router);
 app.use("/api/users", userRouter);
 app.use("/api/enrollments", enrollmentRouter);
+app.use("/api/courses", courseRouter);
 
 const startServer = async () => {
   try {
