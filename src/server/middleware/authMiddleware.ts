@@ -48,7 +48,7 @@ const protect = async (req: Request, res: Response, next: NextFunction) => {
       // Verify the token.
       const decoded = jwt.verify(
         token,
-        Config.jwtSecret
+        Config.jwtSecret,
       ) as Express.Request["user"];
 
       // Add user data to request object.
@@ -66,6 +66,38 @@ const protect = async (req: Request, res: Response, next: NextFunction) => {
   } catch (error) {
     console.error("Auth middleware error:", error);
     res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+/**
+ * Middleware to check if user has professor role.
+ * @param {Request} req - Express request object.
+ * @param {Response} res - Express response object.
+ * @param {NextFunction} next - Express next function.
+ */
+export const professorOnly = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  // First make sure we have a user from the protect middleware.
+  if (!req.user) {
+    res.status(401).json({
+      success: false,
+      message: "Not authorized, no user information",
+    });
+
+    return;
+  }
+
+  // Then check if user has professor role.
+  if (req.user.role === "professor") {
+    next();
+  } else {
+    res.status(403).json({
+      success: false,
+      message: "Not authorized, professor role required",
+    });
   }
 };
 

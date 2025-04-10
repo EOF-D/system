@@ -7,7 +7,7 @@ import {
   getCourseEnrollments,
   getMyEnrollments,
 } from "../controllers/enrollmentController";
-import { protect } from "../middleware/authMiddleware";
+import { professorOnly, protect } from "../middleware/authMiddleware";
 
 // This is the enrollment router for the server.
 const enrollmentRouter = express.Router();
@@ -42,6 +42,9 @@ enrollmentRouter.put("/accept/:id", acceptInvitation);
  * @access  Private
  */
 enrollmentRouter.put("/decline/:id", declineInvitation);
+
+// Protected routes - require authentication and professor role.
+enrollmentRouter.use(professorOnly);
 
 /**
  * @route   GET /api/enrollments/course/:id
