@@ -66,7 +66,7 @@ export async function initializeDatabase() {
       professor_id INTEGER NOT NULL, 
 
       name TEXT NOT NULL,
-      prefix TEXT NOT NULL,     -- Course prefix (e.g., CS, MATH).
+      prefix TEXT NOT NULL,     -- Course prefix (e.g., CSI, MATH).
       number TEXT NOT NULL,     -- Course number (e.g., 101, 102).
       room TEXT NOT NULL,       -- Classroom location (e.g., "JOYC-205").
       start_time TEXT NOT NULL, -- Format: HH:MM (24-hour).
