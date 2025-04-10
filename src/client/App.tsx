@@ -1,5 +1,6 @@
 import IndexPage from "@/client/pages/index";
 import ProfilePage from "@/client/pages/profile";
+import DashboardPage from "@/client/pages/dashboard";
 import { Route, Routes } from "react-router-dom";
 
 /**
@@ -10,6 +11,7 @@ function App() {
     <Routes>
       <Route element={<IndexPage />} path="/" />
       <Route element={<ProfilePage />} path="/profile" />
+      <Route element={<DashboardPage />} path="/dashboard" />
     </Routes>
   );
 }
