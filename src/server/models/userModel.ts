@@ -1,9 +1,6 @@
 import bcrypt from "bcryptjs";
 import { getDb } from "../config/database";
 
-/**
- * User data for the database.
- */
 export interface User {
   /**
    * Unique identifier for the user.
@@ -11,34 +8,55 @@ export interface User {
   id: number;
 
   /**
-   * Name of the user.
+   * Unique identifier for the user's profile.
    */
-  name: string;
+  profile_id: number;
 
   /**
-   * Email address of the user.
+   * The first name of the user.
    */
-  email: string;
+  first_name: string;
 
   /**
-   * Hashed password of the user.
+   * The last name of the user.
    */
-  password?: string;
+  last_name: string;
 
   /**
-   * Role of the user (e.g., admin, user).
+   * The ID of the profile associated with the user.
    */
-  role: string;
+  major: string | null;
 
   /**
-   * Timestamp when the user was created.
+   * The graduation year of the user.
+   */
+  graduation_year: number | null;
+
+  /**
+   * The time the user was created.
    */
   created_at: string;
 
   /**
-   * Timestamp when the user was last updated.
+   * The last time the user was updated.
    */
   updated_at: string;
+
+  /**
+   * The email address of the user.
+   */
+  email: string;
+
+  /**
+   * The hashed password of the user.
+   */
+  password?: string;
+
+  /**
+   * The role of the user (e.g., admin, user, professor).
+   * Default is 'user'.
+   */
+  role: string;
 }
 
 /**
@@ -46,9 +64,29 @@ export interface User {
  */
 export interface CreateUserInput {
   /**
-   * Name of the user.
+   * Profile data for the user.
    */
-  name: string;
+  profile: {
+    /**
+     * First name of the user.
+     */
+    first_name: string;
+
+    /**
+     * Last name of the user.
+     */
+    last_name: string;
+
+    /**
+     * Major of the user. (Not used for professors).
+     */
+    major?: string;
+
+    /**
+     * Graduation year of the user (Not used for professors).
+     */
+    graduation_year?: number;
+  };
 
   /**
    * Email address of the user.
@@ -61,9 +99,9 @@ export interface CreateUserInput {
   password: string;
 
   /**
-   * Role of the user (e.g., admin, user).
+   * Role of the user (e.g., admin, user, professor).
    */
-  role?: string;
+  role: string;
 }
 
 /**
@@ -71,22 +109,42 @@ export interface CreateUserInput {
  */
 export interface UpdateUserInput {
   /**
-   * Name of the user.
+   * New profile data for the user.
    */
-  name?: string;
+  profile?: {
+    /**
+     * First name of the user.
+     */
+    first_name?: string;
+
+    /**
+     * Last name of the user.
+     */
+    last_name?: string;
+
+    /**
+     * Major of the user. (Not used for professors).
+     */
+    major?: string;
+
+    /**
+     * Graduation year of the user (Not used for professors).
+     */
+    graduation_year?: number;
+  };
 
   /**
-   * Email address of the user.
+   * New email address of the user.
    */
   email?: string;
 
   /**
-   * Password of the user.
+   * New password of the user.
    */
   password?: string;
 
   /**
-   * Role of the user (e.g., admin, user).
+   * New role of the user (e.g., admin, user, professor).
    */
   role?: string;
 }
@@ -96,6 +154,23 @@ export interface UpdateUserInput {
  * This model provides methods to create, read, update, and delete users.
  */
 export class UserModel {
+  private static USER_COLUMNS = `
+    u.id,
+    p.id AS profile_id,
+    p.first_name,
+    p.last_name,
+    p.major,
+    p.graduation_year,
+    p.created_at,
+    p.updated_at,
+    u.email,
+    u.role
+  `;
+
+  private static USER_JOIN = `
+    FROM users u JOIN profiles p ON u.profile_id = p.id
+  `;
+
   /**
    * Get all users from the database.
    * @returns {Promise<Omit<User, 'password'>[]>} List of users without passwords.
@@ -105,8 +180,8 @@ export class UserModel {
 
     try {
       const users = await db.all<Omit<User, "password">[]>(`
-        SELECT id, name, email, role, created_at, updated_at 
-        FROM users
+        SELECT ${UserModel.USER_COLUMNS}
+        ${UserModel.USER_JOIN};
       `);
       return users;
     } finally {
@@ -125,11 +200,11 @@ export class UserModel {
     try {
       const user = await db.get<Omit<User, "password">>(
         `
-        SELECT id, name, email, role, created_at, updated_at 
-        FROM users 
-        WHERE id = ?
+        SELECT ${UserModel.USER_COLUMNS}
+        ${UserModel.USER_JOIN}
+        WHERE u.id = ?;
       `,
-        id
+        [id]
       );
 
       return user || null;
@@ -150,9 +225,11 @@ export class UserModel {
     try {
       const user = await db.get<User>(
         `
-        SELECT * FROM users WHERE email = ?
+        SELECT p.id AS profile_id, u.*, p.first_name, p.last_name, p.major, p.graduation_year
+        FROM users u JOIN profiles p ON u.profile_id = p.id
+        WHERE u.email = ?;
       `,
-        email
+        [email]
       );
 
       return user || null;
@@ -172,6 +249,22 @@ export class UserModel {
     const db = await getDb();
 
     try {
+      await db.run("BEGIN TRANSACTION");
+      const profileResult = await db.run(
+        `
+        INSERT INTO profiles (first_name, last_name, major, graduation_year) 
+        VALUES (?, ?, ?, ?)
+      `,
+        [
+          userData.profile.first_name,
+          userData.profile.last_name,
+          userData.profile.major || null,
+          userData.profile.graduation_year || null,
+        ]
+      );
+
+      const profileId = profileResult.lastID;
+
       // Hash the password before storing it.
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(userData.password, salt);
@@ -179,21 +272,24 @@ export class UserModel {
       // Set default role to 'user' if not provided.
       const role = userData.role || "user";
 
-      // Insert the new user into the database.
-      const result = await db.run(
+      const userResult = await db.run(
         `
-        INSERT INTO users (name, email, password, role) 
+        INSERT INTO users (profile_id, email, password, role) 
         VALUES (?, ?, ?, ?)
       `,
-        [userData.name, userData.email, hashedPassword, role]
+        [profileId, userData.email, hashedPassword, role]
       );
 
-      // Get the ID of the newly created user.
-      const id = result.lastID;
+      await db.run("COMMIT");
+      const userId = userResult.lastID;
 
       // Get the created user without password.
-      const newUser = await this.findById(id!);
+      const newUser = await this.findById(userId!);
       return newUser!;
+    } catch (error) {
+      // Rollback in case of error.
+      await db.run("ROLLBACK");
+      throw error;
     } finally {
       await db.close();
     }
@@ -203,7 +299,7 @@ export class UserModel {
    * Update an existing user in the database.
    * @param {number} id - The ID of the user to update.
    * @param {UpdateUserInput} updateData  - The data to update the user with.
-   * @returns
+   * @returns {Promise<Omit<User, 'password'> | null>} The updated user without password or null if not found.
    */
   static async update(
     id: number,
@@ -211,19 +307,67 @@ export class UserModel {
   ): Promise<Omit<User, "password"> | null> {
     const db = await getDb();
     try {
-      // Start building the query.
-      let query = "UPDATE users SET ";
-      const values: any[] = [];
+      await db.run("BEGIN TRANSACTION");
 
-      // Add each field to update.
-      if (updateData.name) {
-        query += "name = ?, ";
-        values.push(updateData.name);
+      // Get the current user to check if it exists.
+      const currentUser = await UserModel.findById(id);
+      if (!currentUser) {
+        await db.run("ROLLBACK");
+        return null;
       }
 
+      // Update profile if needed.
+      if (updateData.profile) {
+        const profileValues: any[] = [];
+        let profileQuery = "UPDATE profiles SET ";
+        let hasProfileUpdates = false;
+
+        if (updateData.profile.first_name) {
+          profileQuery += "first_name = ?, ";
+          hasProfileUpdates = true;
+
+          profileValues.push(updateData.profile.first_name);
+        }
+
+        if (updateData.profile.last_name) {
+          profileQuery += "last_name = ?, ";
+          hasProfileUpdates = true;
+
+          profileValues.push(updateData.profile.last_name);
+        }
+
+        if (updateData.profile.major !== undefined) {
+          profileQuery += "major = ?, ";
+          hasProfileUpdates = true;
+
+          profileValues.push(updateData.profile.major);
+        }
+
+        if (updateData.profile.graduation_year !== undefined) {
+          profileQuery += "graduation_year = ?, ";
+          hasProfileUpdates = true;
+
+          profileValues.push(updateData.profile.graduation_year);
+        }
+
+        if (hasProfileUpdates) {
+          profileQuery += "updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+          profileValues.push(currentUser.profile_id);
+
+          await db.run(profileQuery, profileValues);
+        }
+      }
+
+      // Update user if needed.
+      const userValues: any[] = [];
+      let userQuery = "UPDATE users SET ";
+      let hasUserUpdates = false;
+
       if (updateData.email) {
-        query += "email = ?, ";
-        values.push(updateData.email);
+        hasUserUpdates = true;
+        userQuery += "email = ?, ";
+
+        userValues.push(updateData.email);
       }
 
       if (updateData.password) {
@@ -231,27 +375,33 @@ export class UserModel {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(updateData.password, salt);
 
-        query += "password = ?, ";
-        values.push(hashedPassword);
+        userQuery += "password = ?, ";
+        hasUserUpdates = true;
+
+        userValues.push(hashedPassword);
       }
 
       if (updateData.role) {
-        query += "role = ?, ";
-        values.push(updateData.role);
+        userQuery += "role = ?, ";
+        hasUserUpdates = true;
+
+        userValues.push(updateData.role);
       }
 
-      // Always update the updated_at timestamp.
-      query += "updated_at = CURRENT_TIMESTAMP ";
+      if (hasUserUpdates) {
+        userQuery += "updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+        userValues.push(id);
 
-      // Add the WHERE clause.
-      query += "WHERE id = ?";
-      values.push(id);
+        await db.run(userQuery, userValues);
+      }
 
-      // Run the query.
-      await db.run(query, values);
+      await db.run("COMMIT");
 
       // Get the updated user.
-      return await this.findById(id);
+      return await UserModel.findById(id);
+    } catch (error) {
+      await db.run("ROLLBACK");
+      throw error;
     } finally {
       await db.close();
     }
@@ -265,8 +415,28 @@ export class UserModel {
   static async delete(id: number): Promise<boolean> {
     const db = await getDb();
     try {
-      const result = await db.run("DELETE FROM users WHERE id = ?", id);
-      return result.changes! > 0;
+      await db.run("BEGIN TRANSACTION");
+
+      // Find the user to get the profile_id.
+      const user = await UserModel.findById(id);
+      if (!user) {
+        await db.run("ROLLBACK");
+        return false;
+      }
+
+      // Delete the user first.
+      const userResult = await db.run("DELETE FROM users WHERE id = ?", [id]);
+
+      // If user was successfully deleted, also delete the profile.
+      if (userResult.changes! > 0) {
+        await db.run("DELETE FROM profiles WHERE id = ?", [user.profile_id]);
+      }
+
+      await db.run("COMMIT");
+      return userResult.changes! > 0;
+    } catch (error) {
+      await db.run("ROLLBACK");
+      throw error;
     } finally {
       await db.close();
     }

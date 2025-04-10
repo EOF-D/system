@@ -3,7 +3,7 @@ import {
   createUser,
   deleteUser,
   getUserById,
-  getUserProfile,
+  getCurrentUser,
   getUsers,
   loginUser,
   updateUser,
@@ -31,18 +31,18 @@ userRouter.post("/login", loginUser);
 userRouter.use(protect);
 
 /**
- * @route   GET /api/users/profile
+ * @route   GET /api/users/me
  * @desc    Get current user's profile.
  * @access  Private
  */
-userRouter.get("/profile", getUserProfile);
+userRouter.get("/me", getCurrentUser);
 
 /**
- * @route   PUT /api/users/profile
+ * @route   PUT /api/users/me
  * @desc    Update current user's profile.
  * @access  Private
  */
-userRouter.put("/", updateUser);
+userRouter.put("/me", updateUser);
 
 // Admin only routes.
 userRouter.use(adminOnly);

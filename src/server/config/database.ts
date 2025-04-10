@@ -37,26 +37,26 @@ export async function initializeDatabase() {
   // Create the schema if it doesn't exist.
   await db.exec(`
     CREATE TABLE IF NOT EXISTS profiles (
-      id INTEGER PRIMARY KEY AUTOINCREMENT, 
-      first_name TEXT NOT NULL, 
-      last_name TEXT NOT NULL, 
-      email TEXT NOT NULL UNIQUE, 
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+      first_name TEXT NOT NULL,
+      last_name TEXT NOT NULL,
       major TEXT,              -- Optional field for students.
       graduation_year INTEGER, -- Optional field for students.
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT, 
       profile_id INTEGER NOT NULL, 
+
       email TEXT NOT NULL UNIQUE, 
       password TEXT NOT NULL, 
       role TEXT NOT NULL CHECK (
         role IN ('admin', 'user', 'professor')
-      ), 
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+      ) DEFAULT 'user', 
 
       FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE CASCADE
     );
@@ -64,6 +64,7 @@ export async function initializeDatabase() {
     CREATE TABLE IF NOT EXISTS courses (
       id INTEGER PRIMARY KEY AUTOINCREMENT, 
       professor_id INTEGER NOT NULL, 
+
       prefix TEXT NOT NULL, 
       number TEXT NOT NULL,     -- Department code (e.g., CS, MATH).
       room TEXT NOT NULL,       -- Course number (e.g., 101, 102).
@@ -78,6 +79,7 @@ export async function initializeDatabase() {
       id INTEGER PRIMARY KEY AUTOINCREMENT, 
       student_id INTEGER NOT NULL, 
       course_id INTEGER NOT NULL, 
+
       final_grade TEXT, -- NULL until course is completed.
       enrollment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
       status TEXT DEFAULT 'active' CHECK (
@@ -94,6 +96,7 @@ export async function initializeDatabase() {
     CREATE TABLE IF NOT EXISTS course_items (
       id INTEGER PRIMARY KEY AUTOINCREMENT, 
       course_id INTEGER NOT NULL, 
+
       name TEXT NOT NULL, 
       type TEXT NOT NULL CHECK (
         type IN ('assignment', 'quiz')
@@ -108,8 +111,10 @@ export async function initializeDatabase() {
       id INTEGER PRIMARY KEY AUTOINCREMENT, 
       enrollment_id INTEGER NOT NULL, 
       item_id INTEGER NOT NULL, 
+
       points_earned REAL CHECK (points_earned >= 0), 
       submission_date TIMESTAMP, 
+
       FOREIGN KEY (enrollment_id) REFERENCES enrollments(id) ON DELETE CASCADE, 
       FOREIGN KEY (item_id) REFERENCES course_items(id) ON DELETE CASCADE, 
 
@@ -131,26 +136,6 @@ export async function initializeDatabase() {
     AFTER UPDATE ON profiles
     BEGIN
         UPDATE profiles SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
-    END;
-
-    -- Ensure consistency between users and profiles for timestamps.
-    CREATE TRIGGER ensure_update_consistency
-    AFTER UPDATE ON profiles
-    FOR EACH ROW
-    BEGIN
-        UPDATE users
-        SET updated_at = NEW.updated_at
-        WHERE id = NEW.id;
-    END;
-
-    -- Ensure consistency between users and profiles for emails.
-    CREATE TRIGGER ensure_email_consistency
-    AFTER INSERT ON users
-    FOR EACH ROW
-    BEGIN
-        UPDATE profiles 
-        SET email = NEW.email
-        WHERE id = NEW.profile_id;
     END;
 
     -- Validate professor role before inserting or updating a course.

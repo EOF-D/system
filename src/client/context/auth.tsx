@@ -10,6 +10,10 @@ import {
   getCurrentUser,
   isAuthenticated,
   logout,
+  fetchUserProfile,
+  isAdmin,
+  isProfessor,
+  getUserFullName,
 } from "../services/authService";
 
 /**
@@ -22,9 +26,29 @@ interface User {
   id: number;
 
   /**
-   * The name of the user.
+   * The profile id of the user.
    */
-  name: string;
+  profile_id: number;
+
+  /**
+   * The first name of the user.
+   */
+  first_name: string;
+
+  /**
+   * The last name of the user.
+   */
+  last_name: string;
+
+  /**
+   * The major of the user.
+   */
+  major: string | null;
+
+  /**
+   * The graduation year of the user.
+   */
+  graduation_year: number | null;
 
   /**
    * The email of the user.
@@ -62,6 +86,21 @@ interface AuthContextType {
   isLoggedIn: boolean;
 
   /**
+   * Indicates if the user is an admin.
+   */
+  isAdmin: boolean;
+
+  /**
+   * Indicates if the user is a professor.
+   */
+  isProfessor: boolean;
+
+  /**
+   * The full name of the user.
+   */
+  userFullName: string;
+
+  /**
    * Function to log out the user.
    */
   logout: () => void;
@@ -69,7 +108,7 @@ interface AuthContextType {
   /**
    * Function to refresh the user data.
    */
-  refreshUser: () => void;
+  refreshUser: () => Promise<void>;
 }
 
 // Create the auth context.
@@ -86,12 +125,45 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   // State to hold the login status.
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
-  // Function to refresh user data.
-  const refreshUser = () => {
-    const userData = getCurrentUser();
+  // States for derived user properties.
+  const [isUserAdmin, setIsUserAdmin] = useState<boolean>(false);
+  const [isUserProfessor, setIsUserProfessor] = useState<boolean>(false);
+  const [userFullName, setUserFullName] = useState<string>("");
 
-    setUser(userData as User | null);
-    setIsLoggedIn(isAuthenticated());
+  // Function to refresh user data.
+  const refreshUser = async () => {
+    // First check local storage.
+    const userDataFromStorage = getCurrentUser();
+
+    if (userDataFromStorage) {
+      setUser(userDataFromStorage as User);
+      setIsLoggedIn(true);
+      setIsUserAdmin(isAdmin());
+      setIsUserProfessor(isProfessor());
+      setUserFullName(getUserFullName());
+
+      if (isAuthenticated()) {
+        try {
+          const response = await fetchUserProfile();
+          if (response.success && response.data) {
+            setUser(response.data as User);
+            setIsUserAdmin(response.data.role === "admin");
+            setIsUserProfessor(response.data.role === "professor");
+            setUserFullName(
+              `${response.data.first_name} ${response.data.last_name}`
+            );
+          }
+        } catch (error) {
+          console.error("Failed to refresh user profile:", error);
+        }
+      }
+    } else {
+      setUser(null);
+      setIsLoggedIn(false);
+      setIsUserAdmin(false);
+      setIsUserProfessor(false);
+      setUserFullName("");
+    }
   };
 
   // Handle user logout.
@@ -99,6 +171,9 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     logout();
     setUser(null);
     setIsLoggedIn(false);
+    setIsUserAdmin(false);
+    setIsUserProfessor(false);
+    setUserFullName("");
   };
 
   // Check for existing auth on mount.
@@ -109,6 +184,9 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const value = {
     user,
     isLoggedIn,
+    isAdmin: isUserAdmin,
+    isProfessor: isUserProfessor,
+    userFullName,
     logout: handleLogout,
     refreshUser,
   };

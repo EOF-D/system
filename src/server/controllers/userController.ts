@@ -1,8 +1,12 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { StringValue } from "ms";
+import {
+  UserModel,
+  CreateUserInput,
+  UpdateUserInput,
+} from "../models/userModel";
 import { Config } from "../config/config";
-import { UserModel } from "../models/userModel";
 
 /**
  * Generate a JWT token.
@@ -17,86 +21,39 @@ const generateToken = (id: number, role: string) => {
 };
 
 /**
- * Get all users.
- * @route GET /api/users
- * @access Admin
- */
-export const getUsers = async (_: Request, res: Response) => {
-  try {
-    const users = await UserModel.findAll();
-    res.status(200).json({ success: true, data: users });
-  } catch (error) {
-    console.error("Error fetching users:", error);
-    res.status(500).json({ success: false, message: "Server error" });
-  }
-};
-
-/**
- * Get a user by ID.
- * @route GET /api/users/:id
- * @access Admin
- */
-export const getUserById = async (req: Request, res: Response) => {
-  try {
-    const id = parseInt(req.params.id);
-    const user = await UserModel.findById(id);
-    if (!user) {
-      res.status(404).json({ success: false, message: "User not found" });
-      return;
-    }
-
-    res.status(200).json({ success: true, data: user });
-  } catch (error) {
-    console.error("Error fetching user:", error);
-    res.status(500).json({ success: false, message: "Server error" });
-  }
-};
-
-/**
- * Get the current user's profile.
- * @route GET /api/users/profile
- * @access Private
- */
-export const getUserProfile = async (req: Request, res: Response) => {
-  try {
-    if (!req.user) {
-      res.status(401).json({ success: false, message: "Not authorized" });
-      return;
-    }
-
-    const user = await UserModel.findById(req.user.id);
-    if (!user) {
-      res.status(404).json({ success: false, message: "User not found" });
-      return;
-    }
-
-    res.status(200).json({ success: true, data: user });
-  } catch (error) {
-    console.error("Error fetching profile:", error);
-    res.status(500).json({ success: false, message: "Server error" });
-  }
-};
-
-/**
  * Create a new user.
  * @route POST /api/users
  * @access Public
  */
 export const createUser = async (req: Request, res: Response) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { email, password, role, profile } = req.body;
 
-    // Check if user already exists.
+    // Check if user with this email already exists.
     const existingUser = await UserModel.findByEmail(email);
     if (existingUser) {
       res.status(400).json({
         success: false,
         message: "User with this email already exists",
       });
+
+      return;
     }
 
     // Create the user.
-    const newUser = await UserModel.create({ name, email, password, role });
+    const userData: CreateUserInput = {
+      email,
+      password,
+      role,
+      profile: {
+        first_name: profile.first_name,
+        last_name: profile.last_name,
+        major: profile.major,
+        graduation_year: profile.graduation_year,
+      },
+    };
+
+    const newUser = await UserModel.create(userData);
 
     // Generate a token.
     const token = generateToken(newUser.id, newUser.role);
@@ -129,6 +86,7 @@ export const updateUser = async (req: Request, res: Response) => {
 
   try {
     // Determine which ID to use.
+    // From the URL params (admin updating another user)
     // or from the JWT token (user updating themselves)
     let userId: number;
 
@@ -141,7 +99,7 @@ export const updateUser = async (req: Request, res: Response) => {
       updateSelf = true;
     }
 
-    const { name, email, password, role } = req.body;
+    const { email, password, role, profile } = req.body;
 
     // Check if user exists.
     const user = await UserModel.findById(userId);
@@ -152,7 +110,12 @@ export const updateUser = async (req: Request, res: Response) => {
 
     // If user is updating their own profile, they can't change their role.
     // Only admins can change roles.
-    let updateData: any = { name, email, password };
+    const updateData: UpdateUserInput = {
+      email,
+      password,
+      profile,
+    };
+
     if (req.user.role === "admin" && role) {
       updateData.role = role;
     }
@@ -163,6 +126,7 @@ export const updateUser = async (req: Request, res: Response) => {
       res
         .status(500)
         .json({ success: false, message: "Failed to update user" });
+
       return;
     }
 
@@ -203,10 +167,12 @@ export const deleteUser = async (req: Request, res: Response) => {
       res
         .status(200)
         .json({ success: true, message: "User deleted successfully" });
+      return;
     } else {
       res
         .status(500)
         .json({ success: false, message: "Failed to delete user" });
+      return;
     }
   } catch (error) {
     console.error("Error deleting user:", error);
@@ -234,6 +200,7 @@ export const loginUser = async (req: Request, res: Response) => {
     const isMatch = await UserModel.comparePassword(password, user.password!);
     if (!isMatch) {
       res.status(401).json({ success: false, message: "Invalid credentials" });
+      return;
     }
 
     // Generate token.
@@ -251,6 +218,69 @@ export const loginUser = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error("Error logging in:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+/**
+ * Get all users.
+ * @route GET /api/users
+ * @access Admin
+ */
+export const getUsers = async (_req: Request, res: Response) => {
+  try {
+    const users = await UserModel.findAll();
+    res.status(200).json({ success: true, data: users });
+  } catch (error) {
+    console.error("Error getting users:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+/**
+ * Get a user by ID.
+ * @route GET /api/users/:id
+ * @access Admin or Private (for own profile)
+ */
+export const getUserById = async (req: Request, res: Response) => {
+  try {
+    const id = parseInt(req.params.id);
+    const user = await UserModel.findById(id);
+
+    if (!user) {
+      res.status(404).json({ success: false, message: "User not found" });
+      return;
+    }
+
+    res.status(200).json({ success: true, data: user });
+  } catch (error) {
+    console.error("Error getting user:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+/**
+ * Get current user profile.
+ * @route GET /api/users/me
+ * @access Private
+ */
+export const getCurrentUser = async (req: Request, res: Response) => {
+  if (!req.user) {
+    res.status(401).json({ success: false, message: "Not authorized" });
+    return;
+  }
+
+  try {
+    const user = await UserModel.findById(req.user.id);
+
+    if (!user) {
+      res.status(404).json({ success: false, message: "User not found" });
+      return;
+    }
+
+    res.status(200).json({ success: true, data: user });
+  } catch (error) {
+    console.error("Error getting current user:", error);
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
