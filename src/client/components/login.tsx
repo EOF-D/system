@@ -93,7 +93,7 @@ export const LoginModal: FC<{
   // Validate email domain.
   const validateEmail = (
     emailValue: string,
-    setError: (error: string) => void
+    setError: (error: string) => void,
   ) => {
     if (!emailValue) {
       setError("Email is required");
@@ -106,7 +106,7 @@ export const LoginModal: FC<{
 
     if (!domain || !validDomains.includes(domain)) {
       setError(
-        "Email must be from champlain.edu or mymail.champlain.edu domain"
+        "Email must be from champlain.edu or mymail.champlain.edu domain",
       );
 
       return false;
@@ -198,7 +198,7 @@ export const LoginModal: FC<{
           setSelected("login");
         } else {
           setServerError(
-            response.message || "Sign up failed. Please try again."
+            response.message || "Sign up failed. Please try again.",
           );
         }
       } catch (error) {

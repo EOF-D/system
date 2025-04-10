@@ -65,9 +65,10 @@ export async function initializeDatabase() {
       id INTEGER PRIMARY KEY AUTOINCREMENT, 
       professor_id INTEGER NOT NULL, 
 
-      prefix TEXT NOT NULL, 
-      number TEXT NOT NULL,     -- Department code (e.g., CS, MATH).
-      room TEXT NOT NULL,       -- Course number (e.g., 101, 102).
+      name TEXT NOT NULL,
+      prefix TEXT NOT NULL,     -- Course prefix (e.g., CS, MATH).
+      number TEXT NOT NULL,     -- Course number (e.g., 101, 102).
+      room TEXT NOT NULL,       -- Classroom location (e.g., "JOYC-205").
       start_time TEXT NOT NULL, -- Format: HH:MM (24-hour).
       end_time TEXT NOT NULL,   -- Format: HH:MM (24-hour).
       days TEXT NOT NULL,       -- Format: "M,...,F" ("M,W,F").
@@ -83,7 +84,7 @@ export async function initializeDatabase() {
       final_grade TEXT, -- NULL until course is completed.
       enrollment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
       status TEXT DEFAULT 'active' CHECK (
-        status IN ('active', 'dropped', 'completed')
+        status IN ('active', 'dropped', 'completed', 'pending')
       ), 
 
       FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE, 
@@ -124,7 +125,7 @@ export async function initializeDatabase() {
   `);
 
   const triggersExist = await db.get(
-    "SELECT name FROM sqlite_master WHERE type='trigger' AND name='update_profiles_timestamp'"
+    "SELECT name FROM sqlite_master WHERE type='trigger' AND name='update_profiles_timestamp'",
   );
 
   // If triggers already exist, no need to create them again.
