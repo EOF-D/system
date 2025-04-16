@@ -48,7 +48,7 @@ export const inviteStudent = async (req: Request, res: Response) => {
     });
 
     return;
-  } catch (error) {
+  } catch (error: any) {
     logger.error(`Error inviting student: ${error}`);
     if (
       error.message.includes("No user found") ||
@@ -89,7 +89,7 @@ export const acceptInvitation = async (req: Request, res: Response) => {
     });
 
     return;
-  } catch (error) {
+  } catch (error: any) {
     logger.error(`Error accepting invitation: ${error}`);
     if (
       error.message === "Invitation not found or already processed" ||
@@ -128,7 +128,7 @@ export const declineInvitation = async (req: Request, res: Response) => {
     });
 
     return;
-  } catch (error) {
+  } catch (error: any) {
     logger.error(`Error declining invitation: ${error}`);
     if (
       error.message === "Invitation not found or already processed" ||

@@ -28,14 +28,14 @@ import {
   QuizResponse,
   CreateQuizQuestionInput,
   CreateQuizResponseInput,
-} from "./quiz";
+} from "../quiz";
 
 import {
   Submission,
   SubmissionWithDetails,
   CreateSubmissionInput,
   UpdateSubmissionInput,
-} from "./submission";
+} from "../submission";
 
 import {
   User,

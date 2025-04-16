@@ -5,7 +5,7 @@ import {
   EnrollmentWithCourseDetails,
   EnrollmentWithStudentDetails,
   UpdateEnrollmentStatusInput,
-} from "../types/models/enrollment";
+} from "../../shared/types/models/enrollment";
 import { logger } from "../utils/logger";
 
 /**

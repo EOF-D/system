@@ -1,6 +1,10 @@
 import bcrypt from "bcryptjs";
 import { getDb } from "../config/database";
-import { CreateUserInput, UpdateUserInput, User } from "../types/models/user";
+import {
+  CreateUserInput,
+  UpdateUserInput,
+  User,
+} from "../../shared/types/models/user";
 import { logger } from "../utils/logger";
 
 /**

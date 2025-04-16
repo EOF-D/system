@@ -6,7 +6,7 @@ import {
   QuizQuestion,
   QuizQuestionWithOptions,
   QuizResponse,
-} from "../types/models/quiz";
+} from "../../shared/types/models/quiz";
 import { logger } from "../utils/logger";
 
 /**

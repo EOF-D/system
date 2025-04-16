@@ -3,7 +3,7 @@ import {
   CourseItem,
   CreateCourseItemInput,
   UpdateCourseItemInput,
-} from "../types/models/courseItem";
+} from "../../shared/types/models/courseItem";
 import { logger } from "../utils/logger";
 
 /**

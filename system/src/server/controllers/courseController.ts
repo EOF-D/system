@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { CourseModel } from "../models/courseModel";
 import { EnrollmentModel } from "../models/enrollmentModel";
-import { UpdateCourseInput } from "../types/models/course";
+import { UpdateCourseInput } from "../../shared/types/models/course";
 import { logger } from "../utils/logger";
 
 /**
@@ -62,7 +62,7 @@ export const createCourse = async (req: Request, res: Response) => {
       data: course,
       message: "Course created successfully",
     });
-  } catch (error) {
+  } catch (error: any) {
     logger.error(`Error creating course: ${error}`);
     if (error.message.includes("professor")) {
       res.status(400).json({

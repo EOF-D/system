@@ -3,7 +3,10 @@ import jwt from "jsonwebtoken";
 import { StringValue } from "ms";
 import { Config } from "../config/config";
 import { UserModel } from "../models/userModel";
-import { CreateUserInput, UpdateUserInput } from "../types/models/user";
+import {
+  CreateUserInput,
+  UpdateUserInput,
+} from "../../shared/types/models/user";
 import { logger } from "../utils/logger";
 
 /**

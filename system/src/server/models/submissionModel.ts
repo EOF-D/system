@@ -3,7 +3,7 @@ import {
   Submission,
   SubmissionWithDetails,
   UpdateSubmissionInput,
-} from "../types/models/submission";
+} from "../../shared/types/models/submission";
 import { getDb } from "../config/database";
 import { logger } from "../utils/logger";
 

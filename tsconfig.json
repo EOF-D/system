@@ -12,9 +12,10 @@
       "@/*": ["./system/src/*"],
       "@client/*": ["./system/src/client/*"],
       "@server/*": ["./system/src/server/*"],
+      "@shared/*": ["./system/src/shared/*"],
     },
 
-    "typeRoots": ["system/src/server/types", "system/src/server/types/models", "./node_modules/@types"],
+    "typeRoots": ["system/src/shared/types/models", "./node_modules/@types"],
 
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,

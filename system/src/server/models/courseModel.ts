@@ -5,8 +5,8 @@ import {
   CourseWithProfessor,
   CreateCourseInput,
   UpdateCourseInput,
-} from "../types/models/course";
-import { Enrollment } from "../types/models/enrollment";
+} from "../../shared/types/models/course";
+import { Enrollment } from "../../shared/types/models/enrollment";
 import { logger } from "../utils/logger";
 
 /**
