@@ -5,7 +5,7 @@ import {
   UpdateUserInput,
   User,
 } from "../../shared/types/models/user";
-import { logger } from "../utils/logger";
+import { logger } from "../../shared/utils/logger";
 
 /**
  * Handles user-related database operations.
@@ -179,7 +179,6 @@ export class UserModel {
 
       // Only update user if there are changes.
       if (userFields.length > 0) {
-        userFields.push("updated_at = CURRENT_TIMESTAMP");
         userValues.push(id);
 
         await db.run(

@@ -4,7 +4,7 @@ import { CourseModel } from "../models/courseModel";
 import { EnrollmentModel } from "../models/enrollmentModel";
 import { QuizModel } from "../models/quizModel";
 import { SubmissionModel } from "../models/submissionModel";
-import { logger } from "../utils/logger";
+import { logger } from "../../shared/utils/logger";
 
 /**
  * Create or update a submission.

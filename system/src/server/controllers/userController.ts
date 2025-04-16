@@ -7,7 +7,7 @@ import {
   CreateUserInput,
   UpdateUserInput,
 } from "../../shared/types/models/user";
-import { logger } from "../utils/logger";
+import { logger } from "../../shared/utils/logger";
 
 /**
  * Generate a JWT token.

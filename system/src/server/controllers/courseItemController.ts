@@ -5,7 +5,7 @@ import {
   CreateCourseItemInput,
   UpdateCourseItemInput,
 } from "../../shared/types/models/courseItem";
-import { logger } from "../utils/logger";
+import { logger } from "../../shared/utils/logger";
 
 /**
  * Create a new course item.

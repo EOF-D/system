@@ -6,7 +6,7 @@ import {
   EnrollmentWithStudentDetails,
   UpdateEnrollmentStatusInput,
 } from "../../shared/types/models/enrollment";
-import { logger } from "../utils/logger";
+import { logger } from "../../shared/utils/logger";
 
 /**
  * Handles enrollment-related database operations.

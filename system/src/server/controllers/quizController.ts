@@ -3,7 +3,7 @@ import { CourseItemModel } from "../models/courseItemModel";
 import { CourseModel } from "../models/courseModel";
 import { QuizModel } from "../models/quizModel";
 import { SubmissionModel } from "../models/submissionModel";
-import { logger } from "../utils/logger";
+import { logger } from "../../shared/utils/logger";
 
 /**
  * Create a new quiz question.

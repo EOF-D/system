@@ -4,7 +4,7 @@ import {
   CreateCourseItemInput,
   UpdateCourseItemInput,
 } from "../../shared/types/models/courseItem";
-import { logger } from "../utils/logger";
+import { logger } from "../../shared/utils/logger";
 
 /**
  * Handles course item-related database operations.

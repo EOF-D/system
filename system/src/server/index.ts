@@ -9,7 +9,7 @@ import { enrollmentRouter } from "./routes/enrollmentRoutes";
 import { quizRouter } from "./routes/quizRoutes";
 import { submissionRouter } from "./routes/submissionRoutes";
 import { userRouter } from "./routes/userRoutes";
-import { logger } from "./utils/logger";
+import { logger } from "../shared/utils/logger";
 
 const app = express();
 const port = Config.port;

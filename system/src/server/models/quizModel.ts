@@ -7,7 +7,7 @@ import {
   QuizQuestionWithOptions,
   QuizResponse,
 } from "../../shared/types/models/quiz";
-import { logger } from "../utils/logger";
+import { logger } from "../../shared/utils/logger";
 
 /**
  * Handles quiz-related database operations.

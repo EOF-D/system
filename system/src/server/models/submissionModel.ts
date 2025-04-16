@@ -5,7 +5,7 @@ import {
   UpdateSubmissionInput,
 } from "../../shared/types/models/submission";
 import { getDb } from "../config/database";
-import { logger } from "../utils/logger";
+import { logger } from "../../shared/utils/logger";
 
 /**
  * Handles submission-related database operations.

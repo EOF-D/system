@@ -7,7 +7,7 @@ import {
   UpdateCourseInput,
 } from "../../shared/types/models/course";
 import { Enrollment } from "../../shared/types/models/enrollment";
-import { logger } from "../utils/logger";
+import { logger } from "../../shared/utils/logger";
 
 /**
  * Handles course-related database operations.
