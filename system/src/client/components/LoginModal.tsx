@@ -17,7 +17,7 @@ import {
 } from "@heroui/react";
 import { FC, FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { SiteConfig } from "@client/config";
+import { SiteConfig } from "@/client/config/config";
 
 /**
  * LoginModal component that handles user login and sign-up functionality.

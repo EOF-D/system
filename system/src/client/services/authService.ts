@@ -1,4 +1,4 @@
-import { SiteConfig } from "@client/config";
+import { SiteConfig } from "@/client/config/config";
 import {
   User,
   CreateUserInput,
@@ -13,11 +13,13 @@ const API_URL = `${SiteConfig.apiUrl}/users`;
 interface LoginCredentials {
   /**
    * User email.
+   * @type {string}
    */
   email: string;
 
   /**
    * User password.
+   * @type {string}
    */
   password: string;
 }
@@ -28,16 +30,19 @@ interface LoginCredentials {
 interface AuthResponse {
   /**
    * Indicates if the request was successful.
+   * @type {boolean}
    */
   success: boolean;
 
   /**
    * The data returned from the API.
+   * @type {User | null}
    */
   data?: User;
 
   /**
    * Error message if the request failed.
+   * @type {string | null}
    */
   message?: string;
 }

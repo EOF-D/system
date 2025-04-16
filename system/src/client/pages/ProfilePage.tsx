@@ -1,7 +1,7 @@
 import { useAuth } from "@/client/context/auth";
 import { Layout } from "@/client/layouts/default";
 import { updateUser } from "@/client/services/authService";
-import { SiteConfig } from "@client/config";
+import { SiteConfig } from "@/client/config/config";
 import {
   Button,
   Calendar,
