@@ -6,7 +6,7 @@ coverage/
 
 # production
 build/
-src/server/data/database.sqlite
+system/src/server/data/database.sqlite
 
 # misc
 .DS_Store
@@ -14,3 +14,4 @@ src/server/data/database.sqlite
 npm-debug.log
 .direnv
 .devenv
+.vscode
