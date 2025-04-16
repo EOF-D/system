@@ -60,7 +60,7 @@ export const Navbar: FC<{ activePage: string }> = ({
                 color: "primary",
                 radius: "full",
                 variant: "bordered",
-                size: "md",
+                size: "sm",
               })}
               onPress={logout}
             >

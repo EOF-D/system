@@ -36,7 +36,7 @@ export const ThemeSwitch = () => {
       onValueChange={handleThemeChange}
       defaultSelected
       color="primary"
-      size="md"
+      size="lg"
       thumbIcon={({ isSelected, className }) =>
         isSelected ? (
           <IconBrightnessDownFilled className={className} />
