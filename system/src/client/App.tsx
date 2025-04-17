@@ -1,5 +1,7 @@
 import { IndexPage } from "@/client/pages/IndexPage";
 import { ProfilePage } from "@/client/pages/ProfilePage";
+import { DashboardPage } from "@/client/pages/DashboardPage";
+import { CoursePage } from "@/client/pages/CoursePage";
 import { Route, Routes } from "react-router-dom";
 
 /**
@@ -11,6 +13,8 @@ export function App(): JSX.Element {
     <Routes>
       <Route element={<IndexPage />} path="/" />
       <Route element={<ProfilePage />} path="/profile" />
+      <Route element={<DashboardPage />} path="/dashboard" />
+      <Route element={<CoursePage />} path="/courses/:id" />
     </Routes>
   );
 }

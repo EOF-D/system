@@ -41,7 +41,7 @@ export const createCourseItem = async (
   itemData: CreateCourseItemInput
 ): Promise<CourseItemResponse> => {
   try {
-    const response = await fetch(`${API_URL}/courses/${id}/items`, {
+    const response = await fetch(`${API_URL}/${id}/items`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -73,7 +73,7 @@ export const updateCourseItem = async (
   itemData: UpdateCourseItemInput
 ): Promise<CourseItemResponse> => {
   try {
-    const response = await fetch(`${API_URL}/courses/${id}/items/${itemId}`, {
+    const response = await fetch(`${API_URL}/${id}/items/${itemId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -103,7 +103,7 @@ export const deleteCourseItem = async (
   itemId: number
 ): Promise<CourseItemResponse> => {
   try {
-    const response = await fetch(`${API_URL}/courses/${id}/items/${itemId}`, {
+    const response = await fetch(`${API_URL}/${id}/items/${itemId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -130,7 +130,7 @@ export const getCourseItems = async (
   id: number
 ): Promise<CourseItemResponse> => {
   try {
-    const response = await fetch(`${API_URL}/courses/${id}/items`, {
+    const response = await fetch(`${API_URL}/${id}/items`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -159,7 +159,7 @@ export const getCourseItemById = async (
   itemId: number
 ): Promise<CourseItemResponse> => {
   try {
-    const response = await fetch(`${API_URL}/courses/${id}/items/${itemId}`, {
+    const response = await fetch(`${API_URL}/${id}/items/${itemId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -186,7 +186,7 @@ export const getUpcomingItems = async (
   limit: number = 5
 ): Promise<CourseItemResponse> => {
   try {
-    const response = await fetch(`${API_URL}/courses/upcoming?limit=${limit}`, {
+    const response = await fetch(`${API_URL}/upcoming?limit=${limit}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
