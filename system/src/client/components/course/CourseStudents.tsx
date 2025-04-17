@@ -17,6 +17,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
+  Divider,
   useDisclosure,
 } from "@heroui/react";
 import { IconUserPlus } from "@tabler/icons-react";
@@ -144,8 +145,11 @@ export const CourseStudents = ({
 
   return (
     <div className="mb-6 mt-6">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold flex items-center">
+      <div
+        className="flex justify-between items-center mb-4"
+        style={{ padding: "20px" }}
+      >
+        <h2 className="text-xl font-semibold flex items-center gap-2">
           <span className="bg-primary-100 text-primary-500 p-2 rounded-full mr-2">
             <IconUserPlus size={20} />
           </span>
@@ -161,6 +165,7 @@ export const CourseStudents = ({
           Invite Student
         </Button>
       </div>
+      <Divider />
 
       <Card className="shadow-sm border-none overflow-hidden" radius="lg">
         <Table

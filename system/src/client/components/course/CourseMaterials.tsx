@@ -23,6 +23,7 @@ import {
   ModalHeader,
   Spinner,
   Textarea,
+  Divider,
   useDisclosure,
 } from "@heroui/react";
 import {
@@ -175,7 +176,7 @@ export const CourseMaterials = ({
       const response = await updateCourseItem(
         courseId,
         materialForm.id,
-        itemData
+        itemData,
       );
       if (response.success) {
         onItemsChange();
@@ -467,13 +468,17 @@ export const CourseMaterials = ({
 
   return (
     <div className="mb-6 mt-6">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold flex items-center">
+      <div
+        className="flex justify-between items-center mb-4"
+        style={{ padding: "20px" }}
+      >
+        <h2 className="text-xl font-semibold flex items-center gap-2">
           <span className="bg-primary-100 text-primary-500 p-2 rounded-full mr-2">
             <IconFileText size={20} />
           </span>
           Course Materials
         </h2>
+
         {isProfessor() && (
           <Button
             color="primary"
@@ -486,6 +491,7 @@ export const CourseMaterials = ({
           </Button>
         )}
       </div>
+      <Divider />
 
       {isLoading ? (
         <div className="flex justify-center items-center h-40">
@@ -568,10 +574,8 @@ export const CourseMaterials = ({
           ))}
         </div>
       ) : (
-        <Card
-          radius="lg"
-          className="border-dashed border-2 border-default-200 bg-default-50 p-6 text-center"
-        >
+        <Card radius="lg" className="bg-default-50 p-6 text-center">
+          <Divider />
           <CardBody>
             <p className="text-default-600">
               No course materials have been added yet.

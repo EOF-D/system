@@ -66,7 +66,7 @@ export function DashboardPage(): JSX.Element {
   >([]);
 
   const [invitations, setInvitations] = useState<EnrollmentWithCourseDetails[]>(
-    []
+    [],
   );
 
   const [isCoursesLoading, setIsCoursesLoading] = useState(true);
@@ -130,7 +130,7 @@ export function DashboardPage(): JSX.Element {
       const response = await getCourses();
       if (response.success && response.data) {
         setCourses(
-          response.data as CourseWithEnrollments[] | CourseWithProfessor[]
+          response.data as CourseWithEnrollments[] | CourseWithProfessor[],
         );
       } else {
         setError(response.message || "Failed to fetch courses");
@@ -324,13 +324,18 @@ export function DashboardPage(): JSX.Element {
     if (isProfessor()) return null;
 
     return (
-      <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4 flex items-center">
-          <span className="bg-primary-100 text-primary-500 p-2 rounded-full mr-2">
-            <IconDoorEnter size={20} />
-          </span>
-          Course Invitations
-        </h2>
+      <div style={{ paddingBottom: "20px" }}>
+        <div
+          className="flex justify-between items-center mb-4"
+          style={{ paddingTop: "10px", paddingBottom: "10px" }}
+        >
+          <h2 className="text-xl font-semibold flex items-center gap-2">
+            <span className="bg-primary-100 text-primary-500 p-2 rounded-full mr-2">
+              <IconDoorEnter size={20} />
+            </span>
+            Course Invitations
+          </h2>
+        </div>
 
         {isInvitationsLoading ? (
           <div className="flex justify-center items-center h-32">
@@ -389,10 +394,7 @@ export function DashboardPage(): JSX.Element {
             ))}
           </div>
         ) : (
-          <Card
-            radius="lg"
-            className="border-dashed border-2 border-default-200 bg-default-50 text-center p-6 mb-10"
-          >
+          <Card radius="lg" className="bg-default-50 text-center p-6 mb-10">
             <CardBody>
               <p className="text-default-600">
                 You don't have any pending invitations.
@@ -405,7 +407,7 @@ export function DashboardPage(): JSX.Element {
   };
 
   const renderCourseCard = (
-    course: CourseWithEnrollments | CourseWithProfessor
+    course: CourseWithEnrollments | CourseWithProfessor,
   ) => {
     return (
       <Card
@@ -524,8 +526,11 @@ export function DashboardPage(): JSX.Element {
   const renderCoursesList = () => {
     return (
       <div>
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold flex items-center">
+        <div
+          className="flex justify-between items-center mb-4"
+          style={{ paddingTop: "10px", paddingBottom: "10px" }}
+        >
+          <h2 className="text-xl font-semibold flex items-center gap-2">
             <span className="bg-primary-100 text-primary-500 p-2 rounded-full mr-2">
               <IconBook size={15} />
             </span>
@@ -538,7 +543,6 @@ export function DashboardPage(): JSX.Element {
               startContent={<IconPlus size={15} />}
               onPress={onCreateOpen}
               radius="full"
-              className="shadow-sm"
             >
               Create Course
             </Button>
@@ -561,31 +565,19 @@ export function DashboardPage(): JSX.Element {
             <Spinner size="lg" color="primary" />
           </div>
         ) : courses.length === 0 ? (
-          <Card
-            radius="lg"
-            className="border-dashed border-2 border-default-200 bg-default-50 p-8 text-center"
-          >
+          <Card radius="lg" className="bg-default-50 text-center">
             <CardBody>
               <p className="text-default-600 mb-4">
                 {isProfessor()
                   ? "You haven't created any courses yet."
                   : "You're not enrolled in any courses yet."}
               </p>
-              {isProfessor() && (
-                <Button
-                  color="primary"
-                  startContent={<IconPlus size={18} />}
-                  onPress={onCreateOpen}
-                  radius="full"
-                  className="shadow-sm mx-auto"
-                >
-                  Create your first course
-                </Button>
-              )}
             </CardBody>
           </Card>
         ) : (
-          <div className="grid gap-4">{courses.map(renderCourseCard)}</div>
+          <div className="grid gap-4" style={{ paddingBottom: "20px" }}>
+            {courses.map(renderCourseCard)}
+          </div>
         )}
       </div>
     );

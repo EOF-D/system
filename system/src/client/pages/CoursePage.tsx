@@ -12,7 +12,7 @@ import {
   CourseWithProfessor,
 } from "@/shared/types/models/course";
 import { CourseItem } from "@/shared/types/models/courseItem";
-import { Button, Spinner, Tab, Tabs, useDisclosure } from "@heroui/react";
+import { Button, Spinner, Tab, Tabs, Card, useDisclosure } from "@heroui/react";
 import { IconFileText, IconUsers } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -75,7 +75,7 @@ export function CoursePage(): JSX.Element {
       const response = await getCourseEnrollments(courseId);
       if (response.success && response.data) {
         setEnrollments(
-          Array.isArray(response.data) ? response.data : [response.data]
+          Array.isArray(response.data) ? response.data : [response.data],
         );
       } else {
         console.error(`Error fetching enrollments: ${response.message}`);
@@ -152,52 +152,57 @@ export function CoursePage(): JSX.Element {
           onMaterialAdd={materialDisclosure.onOpen}
         />
 
-        <Tabs
-          aria-label="Course sections"
-          color="primary"
-          variant="underlined"
-          classNames={{
-            tabList:
-              "bg-white bg-opacity-80 backdrop-blur-md rounded-xl p-1 shadow-sm",
-            cursor: "bg-primary-500",
-          }}
-        >
-          <Tab
-            key="materials"
-            title={
-              <div className="flex items-center gap-2 p-2">
-                <IconFileText size={18} />
-                <span>Materials</span>
-              </div>
-            }
+        <div style={{ paddingTop: "10px" }}>
+          <Tabs
+            className="radius-lg"
+            aria-label="Course sections"
+            color="primary"
+            variant="solid"
+            classNames={{
+              tabList: "backdrop-blur-md rounded-xl p-1 shadow-sm",
+            }}
           >
-            <CourseMaterials
-              courseId={courseId}
-              courseItems={courseItems}
-              isLoading={isItemsLoading}
-              onItemsChange={fetchCourseItems}
-              modalDisclosure={materialDisclosure}
-            />
-          </Tab>
-
-          {isProfessor() && (
             <Tab
-              key="students"
+              key="materials"
               title={
                 <div className="flex items-center gap-2 p-2">
-                  <IconUsers size={18} />
-                  <span>Students</span>
+                  <IconFileText size={18} />
+                  <span>Materials</span>
                 </div>
               }
             >
-              <CourseStudents
-                courseId={courseId}
-                enrollments={enrollments}
-                onInviteSuccess={fetchEnrollments}
-              />
+              <Card>
+                <CourseMaterials
+                  courseId={courseId}
+                  courseItems={courseItems}
+                  isLoading={isItemsLoading}
+                  onItemsChange={fetchCourseItems}
+                  modalDisclosure={materialDisclosure}
+                />
+              </Card>
             </Tab>
-          )}
-        </Tabs>
+
+            {isProfessor() && (
+              <Tab
+                key="students"
+                title={
+                  <div className="flex items-center gap-2 p-2">
+                    <IconUsers size={18} />
+                    <span>Students</span>
+                  </div>
+                }
+              >
+                <Card>
+                  <CourseStudents
+                    courseId={courseId}
+                    enrollments={enrollments}
+                    onInviteSuccess={fetchEnrollments}
+                  />
+                </Card>
+              </Tab>
+            )}
+          </Tabs>
+        </div>
       </div>
     </Layout>
   );
