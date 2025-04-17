@@ -118,7 +118,7 @@ export function CoursePage(): JSX.Element {
       <Layout page="Course">
         <div className="container mx-auto px-4 py-6">
           <div className="flex justify-center items-center h-64">
-            <Spinner size="lg" />
+            <Spinner size="lg" color="primary" />
           </div>
         </div>
       </Layout>
@@ -133,7 +133,7 @@ export function CoursePage(): JSX.Element {
             <p className="text-danger font-semibold text-lg mb-2">
               {error || "Course not found"}
             </p>
-            <Button color="primary" href="/dashboard">
+            <Button color="primary" href="/dashboard" radius="full">
               Return to Dashboard
             </Button>
           </div>
@@ -152,11 +152,20 @@ export function CoursePage(): JSX.Element {
           onMaterialAdd={materialDisclosure.onOpen}
         />
 
-        <Tabs aria-label="Course sections">
+        <Tabs
+          aria-label="Course sections"
+          color="primary"
+          variant="underlined"
+          classNames={{
+            tabList:
+              "bg-white bg-opacity-80 backdrop-blur-md rounded-xl p-1 shadow-sm",
+            cursor: "bg-primary-500",
+          }}
+        >
           <Tab
             key="materials"
             title={
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 p-2">
                 <IconFileText size={18} />
                 <span>Materials</span>
               </div>
@@ -175,7 +184,7 @@ export function CoursePage(): JSX.Element {
             <Tab
               key="students"
               title={
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 p-2">
                   <IconUsers size={18} />
                   <span>Students</span>
                 </div>

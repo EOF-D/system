@@ -92,12 +92,22 @@ export const CourseStudents = ({
 
   const renderInviteStudentModal = () => {
     return (
-      <Modal isOpen={isInviteOpen} onClose={onInviteClose}>
+      <Modal
+        isOpen={isInviteOpen}
+        onClose={onInviteClose}
+        backdrop="blur"
+        className="rounded-lg"
+      >
         <ModalContent>
-          <ModalHeader>Invite students to this course</ModalHeader>
+          <ModalHeader className="flex flex-col gap-1">
+            <h3 className="text-xl">Invite Students to this Course</h3>
+            <p className="text-sm text-default-500">
+              Send an invitation to join this course
+            </p>
+          </ModalHeader>
           <ModalBody>
             {inviteError && (
-              <div className="bg-danger-100 text-danger-700 p-3 rounded-lg mb-4">
+              <div className="bg-danger-50 text-danger-700 p-3 rounded-lg mb-4">
                 {inviteError}
               </div>
             )}
@@ -109,10 +119,12 @@ export const CourseStudents = ({
               type="email"
               isRequired
               description="Enter the student's email address"
+              variant="bordered"
+              radius="lg"
             />
           </ModalBody>
           <ModalFooter>
-            <Button variant="bordered" onPress={onInviteClose}>
+            <Button variant="flat" onPress={onInviteClose} radius="full">
               Cancel
             </Button>
             <Button
@@ -120,6 +132,7 @@ export const CourseStudents = ({
               onPress={handleInviteStudent}
               isLoading={inviteLoading}
               isDisabled={!inviteEmail || inviteLoading}
+              radius="full"
             >
               Send Invitation
             </Button>
@@ -130,62 +143,81 @@ export const CourseStudents = ({
   };
 
   return (
-    <div className="mb-6">
+    <div className="mb-6 mt-6">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Enrolled Students</h2>
+        <h2 className="text-xl font-semibold flex items-center">
+          <span className="bg-primary-100 text-primary-500 p-2 rounded-full mr-2">
+            <IconUserPlus size={20} />
+          </span>
+          Enrolled Students
+        </h2>
         <Button
           color="primary"
-          variant="light"
+          variant="flat"
           startContent={<IconUserPlus size={18} />}
           onPress={onInviteOpen}
+          radius="full"
         >
           Invite Student
         </Button>
       </div>
 
-      <Card>
-        <Table aria-label="Enrolled students">
+      <Card className="shadow-sm border-none overflow-hidden" radius="lg">
+        <Table
+          aria-label="Enrolled students"
+          color="primary"
+          selectionMode="none"
+          classNames={{
+            th: "bg-default-50 text-default-700",
+            td: "py-3",
+          }}
+        >
           <TableHeader>
             <TableColumn>NAME</TableColumn>
             <TableColumn>EMAIL</TableColumn>
             <TableColumn>STATUS</TableColumn>
             <TableColumn>JOINED</TableColumn>
           </TableHeader>
-          <TableBody>
-            {enrollments.length > 0 ? (
-              enrollments.map((enrollment) => (
-                <TableRow key={enrollment.id}>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Avatar name={enrollment.student_full_name} size="sm" />
-                      <span>{enrollment.student_full_name}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>{enrollment.student_email}</TableCell>
-                  <TableCell>
-                    <Chip
-                      size="sm"
-                      color={
-                        enrollment.status === "active" ? "success" : "default"
-                      }
-                    >
-                      {enrollment.status}
-                    </Chip>
-                  </TableCell>
-                  <TableCell>
-                    {formatDate(enrollment.enrollment_date)}
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={4}>
-                  <div className="text-center py-4 text-default-500">
-                    No students enrolled yet
-                  </div>
-                </TableCell>
-              </TableRow>
-            )}
+          <TableBody emptyContent="No students enrolled yet">
+            {enrollments.length > 0
+              ? enrollments.map((enrollment) => (
+                  <TableRow key={enrollment.id}>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Avatar
+                          name={enrollment.student_full_name}
+                          size="sm"
+                          color="primary"
+                          isBordered
+                        />
+                        <span className="font-medium">
+                          {enrollment.student_full_name}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-default-600">
+                      {enrollment.student_email}
+                    </TableCell>
+                    <TableCell>
+                      <Chip
+                        size="sm"
+                        color={
+                          enrollment.status === "active" ? "success" : "default"
+                        }
+                        variant="flat"
+                        radius="full"
+                      >
+                        {enrollment.status}
+                      </Chip>
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-default-500">
+                        {formatDate(enrollment.enrollment_date)}
+                      </span>
+                    </TableCell>
+                  </TableRow>
+                ))
+              : []}
           </TableBody>
         </Table>
       </Card>

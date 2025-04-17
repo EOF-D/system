@@ -325,31 +325,48 @@ export function DashboardPage(): JSX.Element {
 
     return (
       <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">Course Invitations</h2>
+        <h2 className="text-xl font-semibold mb-4 flex items-center">
+          <span className="bg-primary-100 text-primary-500 p-2 rounded-full mr-2">
+            <IconDoorEnter size={20} />
+          </span>
+          Course Invitations
+        </h2>
 
         {isInvitationsLoading ? (
-          <div className="flex justify-center items-center h-40">
+          <div className="flex justify-center items-center h-32">
             <Spinner size="md" />
           </div>
         ) : invitations.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {invitations.map((invitation) => (
-              <Card key={invitation.id} className="border border-default-200">
+              <Card
+                key={invitation.id}
+                className="border-none shadow-md hover:shadow-lg transition-shadow bg-gradient-to-br from-default-50 to-default-100"
+                radius="lg"
+              >
                 <CardBody>
-                  <p>
-                    <span className="font-medium">Professor:</span>{" "}
-                    {invitation.professor_full_name}
-                  </p>
-                  <p className="text-sm text-default-500 mt-2">
-                    Invited on {formatDate(invitation.enrollment_date)}
-                  </p>
+                  <div className="flex flex-col gap-1">
+                    <h3 className="text-lg font-semibold">
+                      {invitation.course_prefix}-{invitation.course_number}
+                    </h3>
+                    <p className="text-default-600">{invitation.course_name}</p>
+                    <div className="flex items-center gap-1 text-default-500 mt-1">
+                      <span>Professor:</span>
+                      <span className="font-medium">
+                        {invitation.professor_full_name}
+                      </span>
+                    </div>
+                    <p className="text-sm text-default-400 mt-2">
+                      Invited on {formatDate(invitation.enrollment_date)}
+                    </p>
+                  </div>
                 </CardBody>
                 <Divider />
                 <CardFooter className="flex justify-between">
                   <Button
                     color="success"
                     size="sm"
-                    variant="light"
+                    variant="flat"
                     startContent={<IconDoorEnter size={16} />}
                     onPress={() => handleAcceptInvitation(invitation.id)}
                     isLoading={invitationAction === invitation.id}
@@ -360,7 +377,7 @@ export function DashboardPage(): JSX.Element {
                   <Button
                     color="danger"
                     size="sm"
-                    variant="light"
+                    variant="flat"
                     onPress={() => handleDeclineInvitation(invitation.id)}
                     isLoading={invitationAction === invitation.id}
                     isDisabled={invitationAction !== null}
@@ -372,11 +389,16 @@ export function DashboardPage(): JSX.Element {
             ))}
           </div>
         ) : (
-          <div className="bg-default-100 rounded-lg p-6 text-center mb-10">
-            <p className="text-default-600">
-              You don't have any pending invitations.
-            </p>
-          </div>
+          <Card
+            radius="lg"
+            className="border-dashed border-2 border-default-200 bg-default-50 text-center p-6 mb-10"
+          >
+            <CardBody>
+              <p className="text-default-600">
+                You don't have any pending invitations.
+              </p>
+            </CardBody>
+          </Card>
         )}
       </div>
     );
@@ -388,21 +410,33 @@ export function DashboardPage(): JSX.Element {
     return (
       <Card
         key={course.id}
-        className="border border-default-200 hover:shadow-md transition-shadow"
+        className="border-none shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1 bg-gradient-to-br from-default-50 to-default-100"
         isPressable
+        radius="lg"
         onPress={() => {
           navigate(`/courses/${course.id}`);
         }}
       >
-        <CardHeader className="flex justify-between items-center bg-default-100">
-          <h3 className="text-lg font-semibold justify-start">
-            {course.prefix}-{course.number}
-          </h3>
-          <p className="text-sm text-default-500">{course.name}</p>
-          {isProfessor() ? (
+        <CardHeader className="flex justify-between items-center pb-2">
+          <div className="flex flex-col">
+            <div className="flex items-center gap-2">
+              <h3 className="text-lg font-bold text-primary-500">
+                {course.prefix}-{course.number}
+              </h3>
+              {isStudentCourse(course) && (
+                <Chip size="sm" variant="flat" color="primary" radius="full">
+                  {course.professor_full_name}
+                </Chip>
+              )}
+            </div>
+            <p className="text-md text-default-700 font-medium mt-1">
+              {course.name}
+            </p>
+          </div>
+          {isProfessor() && (
             <Dropdown>
               <DropdownTrigger>
-                <Button isIconOnly size="sm" variant="light">
+                <Button isIconOnly size="sm" variant="light" radius="full">
                   <IconDotsVertical size={16} />
                 </Button>
               </DropdownTrigger>
@@ -429,41 +463,35 @@ export function DashboardPage(): JSX.Element {
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
-          ) : (
-            isStudentCourse(course) && (
-              <Chip size="sm" variant="flat">
-                {course.professor_full_name}
-              </Chip>
-            )
           )}
         </CardHeader>
         <Divider />
-        <CardBody>
+        <CardBody className="py-3">
           <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-2">
-              <IconMapPin size={16} className="text-default-500" />
+            <div className="flex items-center gap-2 text-default-600">
+              <IconMapPin size={16} className="text-primary-400" />
               <span>{course.room}</span>
             </div>
-            <div className="flex items-center gap-2">
-              <IconCalendarTime size={16} className="text-default-500" />
+            <div className="flex items-center gap-2 text-default-600">
+              <IconCalendarTime size={16} className="text-primary-400" />
               <span>
                 {formatTime(course.start_time)} - {formatTime(course.end_time)}
               </span>
             </div>
-            <div className="flex items-center gap-2">
-              <IconBook size={16} className="text-default-500" />
+            <div className="flex items-center gap-2 text-default-600">
+              <IconBook size={16} className="text-primary-400" />
               <span>{formatDays(course.days)}</span>
             </div>
           </div>
         </CardBody>
         <Divider />
-        <CardFooter className="flex justify-between">
+        <CardFooter className="flex justify-between pt-2">
           {isProfessorCourse(course) ? (
             <div className="flex items-center gap-2">
-              <Chip size="sm" color="primary">
+              <Chip size="sm" color="primary" radius="full">
                 {course.enrollment_count} Students
               </Chip>
-              <Chip size="sm" variant="flat">
+              <Chip size="sm" variant="flat" radius="full">
                 {course.assignment_count} Assignments
               </Chip>
             </div>
@@ -473,6 +501,7 @@ export function DashboardPage(): JSX.Element {
             typeof course.final_grade === "string" && (
               <Chip
                 size="sm"
+                radius="full"
                 color={
                   course.final_grade.startsWith("A")
                     ? "success"
@@ -496,46 +525,67 @@ export function DashboardPage(): JSX.Element {
     return (
       <div>
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">
+          <h2 className="text-xl font-semibold flex items-center">
+            <span className="bg-primary-100 text-primary-500 p-2 rounded-full mr-2">
+              <IconBook size={15} />
+            </span>
             {isProfessor() ? "My Courses" : "Enrolled Courses"}
           </h2>
 
           {isProfessor() && (
             <Button
               color="primary"
-              startContent={<IconPlus size={18} />}
+              startContent={<IconPlus size={15} />}
               onPress={onCreateOpen}
+              radius="full"
+              className="shadow-sm"
             >
               Create Course
             </Button>
           )}
         </div>
 
+        {error && (
+          <Card
+            className="mb-4 bg-danger-50 border-danger-200 shadow-none"
+            radius="lg"
+          >
+            <CardBody>
+              <p className="text-danger-500">{error}</p>
+            </CardBody>
+          </Card>
+        )}
+
         {isCoursesLoading ? (
           <div className="flex justify-center items-center h-64">
-            <Spinner size="md" />
+            <Spinner size="lg" color="primary" />
           </div>
         ) : courses.length === 0 ? (
-          <div className="bg-default-100 rounded-lg p-8 text-center">
-            <p className="text-default-600 mb-4">
-              {isProfessor()
-                ? "You haven't created any courses yet."
-                : "You're not enrolled in any courses yet."}
-            </p>
-            {isProfessor() && (
-              <Button
-                color="primary"
-                startContent={<IconPlus size={18} />}
-                onPress={onCreateOpen}
-              >
-                Create your first course
-              </Button>
-            )}
-          </div>
+          <Card
+            radius="lg"
+            className="border-dashed border-2 border-default-200 bg-default-50 p-8 text-center"
+          >
+            <CardBody>
+              <p className="text-default-600 mb-4">
+                {isProfessor()
+                  ? "You haven't created any courses yet."
+                  : "You're not enrolled in any courses yet."}
+              </p>
+              {isProfessor() && (
+                <Button
+                  color="primary"
+                  startContent={<IconPlus size={18} />}
+                  onPress={onCreateOpen}
+                  radius="full"
+                  className="shadow-sm mx-auto"
+                >
+                  Create your first course
+                </Button>
+              )}
+            </CardBody>
+          </Card>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {courses.map(renderCourseCard)}
-          </div>
+          <div className="grid gap-4">{courses.map(renderCourseCard)}</div>
         )}
       </div>
     );
@@ -543,9 +593,20 @@ export function DashboardPage(): JSX.Element {
 
   const renderCreateCourseModal = () => {
     return (
-      <Modal isOpen={isCreateOpen} onClose={onCreateClose} size="lg">
+      <Modal
+        isOpen={isCreateOpen}
+        onClose={onCreateClose}
+        size="lg"
+        backdrop="blur"
+        className="rounded-lg"
+      >
         <ModalContent>
-          <ModalHeader>Create new course</ModalHeader>
+          <ModalHeader className="flex flex-col gap-1">
+            <h3 className="text-xl">Create new course</h3>
+            <p className="text-default-500 text-sm">
+              Fill in the details to create a new course
+            </p>
+          </ModalHeader>
           <ModalBody>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="md:col-span-2">
@@ -557,6 +618,9 @@ export function DashboardPage(): JSX.Element {
                     handleCourseFormChange("name", value)
                   }
                   isRequired
+                  variant="bordered"
+                  radius="lg"
+                  className="mb-2"
                 />
               </div>
               <Input
@@ -567,6 +631,8 @@ export function DashboardPage(): JSX.Element {
                   handleCourseFormChange("prefix", value)
                 }
                 isRequired
+                variant="bordered"
+                radius="lg"
               />
               <Input
                 label="Course Number"
@@ -576,6 +642,8 @@ export function DashboardPage(): JSX.Element {
                   handleCourseFormChange("number", value)
                 }
                 isRequired
+                variant="bordered"
+                radius="lg"
               />
               <Input
                 label="Room"
@@ -583,6 +651,8 @@ export function DashboardPage(): JSX.Element {
                 value={courseForm.room}
                 onValueChange={(value) => handleCourseFormChange("room", value)}
                 isRequired
+                variant="bordered"
+                radius="lg"
               />
               <Select
                 label="Meeting Days"
@@ -590,6 +660,8 @@ export function DashboardPage(): JSX.Element {
                 selectionMode="multiple"
                 onChange={(e) => handleCourseFormChange("days", e.target.value)}
                 isRequired
+                variant="bordered"
+                radius="lg"
               >
                 {dayOptions.map((day) => (
                   <SelectItem key={day.value}>{day.label}</SelectItem>
@@ -604,6 +676,8 @@ export function DashboardPage(): JSX.Element {
                   handleCourseFormChange("start_time", value)
                 }
                 isRequired
+                variant="bordered"
+                radius="lg"
               />
               <Input
                 label="End Time"
@@ -614,14 +688,16 @@ export function DashboardPage(): JSX.Element {
                   handleCourseFormChange("end_time", value)
                 }
                 isRequired
+                variant="bordered"
+                radius="lg"
               />
             </div>
           </ModalBody>
           <ModalFooter>
-            <Button variant="bordered" onPress={onCreateClose}>
+            <Button variant="flat" onPress={onCreateClose} radius="full">
               Cancel
             </Button>
-            <Button color="primary" onPress={handleCreateCourse}>
+            <Button color="primary" onPress={handleCreateCourse} radius="full">
               Create Course
             </Button>
           </ModalFooter>
@@ -632,14 +708,22 @@ export function DashboardPage(): JSX.Element {
 
   const renderInviteStudentModal = () => {
     return (
-      <Modal isOpen={isInviteOpen} onClose={onInviteClose}>
+      <Modal
+        isOpen={isInviteOpen}
+        onClose={onInviteClose}
+        backdrop="blur"
+        className="rounded-lg"
+      >
         <ModalContent>
           <ModalHeader>
-            Invite Students to {selectedCourse?.prefix} {selectedCourse?.number}
+            <h3 className="text-xl">
+              Invite Students to {selectedCourse?.prefix}{" "}
+              {selectedCourse?.number}
+            </h3>
           </ModalHeader>
           <ModalBody>
             {inviteError && (
-              <div className="bg-danger-100 text-danger-700 p-3 rounded-lg mb-4">
+              <div className="bg-danger-50 text-danger-500 p-3 rounded-lg mb-4">
                 {inviteError}
               </div>
             )}
@@ -651,10 +735,12 @@ export function DashboardPage(): JSX.Element {
               type="email"
               isRequired
               description="Enter the student's university email address"
+              variant="bordered"
+              radius="lg"
             />
           </ModalBody>
           <ModalFooter>
-            <Button variant="bordered" onPress={onInviteClose}>
+            <Button variant="flat" onPress={onInviteClose} radius="full">
               Cancel
             </Button>
             <Button
@@ -662,6 +748,7 @@ export function DashboardPage(): JSX.Element {
               onPress={handleInviteStudent}
               isLoading={inviteLoading}
               isDisabled={!inviteEmail || inviteLoading}
+              radius="full"
             >
               Send Invitation
             </Button>
@@ -674,13 +761,14 @@ export function DashboardPage(): JSX.Element {
   return (
     <Layout page="Dashboard">
       <div className="container mx-auto px-4 py-6">
-        <h1 className="text-2xl font-bold mb-6">My Dashboard</h1>
-
-        {error && (
-          <div className="bg-danger-100 text-danger-700 p-3 rounded-lg mb-4">
-            {error}
-          </div>
-        )}
+        <div className="bg-gradient-to-r from-primary-100 to-default-100 p-6 rounded-xl shadow-sm mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-primary-700">
+            My Dashboard
+          </h1>
+          <p className="text-default-600 mt-1">
+            Manage your courses and invitations
+          </p>
+        </div>
 
         {renderInvitationsList()}
         {renderCoursesList()}

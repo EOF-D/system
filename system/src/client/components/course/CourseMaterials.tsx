@@ -221,13 +221,26 @@ export const CourseMaterials = ({
   const renderMaterialIcon = (type: string) => {
     switch (type) {
       case "document":
-        return <IconFileText size={18} />;
+        return <IconFileText size={20} />;
       case "assignment":
-        return <IconBook size={18} />;
+        return <IconBook size={20} />;
       case "quiz":
-        return <IconCertificate size={18} />;
+        return <IconCertificate size={20} />;
       default:
-        return <IconFileText size={18} />;
+        return <IconFileText size={20} />;
+    }
+  };
+
+  const getMaterialChipColor = (type: string) => {
+    switch (type) {
+      case "document":
+        return "default";
+      case "assignment":
+        return "primary";
+      case "quiz":
+        return "secondary";
+      default:
+        return "default";
     }
   };
 
@@ -237,9 +250,16 @@ export const CourseMaterials = ({
         isOpen={addDisclosure.isOpen}
         onClose={addDisclosure.onClose}
         size="lg"
+        backdrop="blur"
+        className="rounded-lg"
       >
         <ModalContent>
-          <ModalHeader>Add course material</ModalHeader>
+          <ModalHeader className="flex flex-col gap-1">
+            <h3 className="text-xl">Add Course Material</h3>
+            <p className="text-sm text-default-500">
+              Add a new document, assignment, or quiz
+            </p>
+          </ModalHeader>
           <ModalBody>
             <div className="grid grid-cols-1 gap-4">
               <Input
@@ -250,6 +270,8 @@ export const CourseMaterials = ({
                   setMaterialForm({ ...materialForm, name: value })
                 }
                 isRequired
+                variant="bordered"
+                radius="lg"
               />
               <Textarea
                 isRequired
@@ -259,10 +281,13 @@ export const CourseMaterials = ({
                 onValueChange={(value) =>
                   setMaterialForm({ ...materialForm, description: value })
                 }
+                variant="bordered"
+                radius="lg"
+                minRows={3}
               />
               <div className="grid grid-cols-2 gap-4">
                 <select
-                  className="border rounded p-2"
+                  className="border rounded-lg p-2"
                   value={materialForm.type}
                   onChange={(e) =>
                     setMaterialForm({
@@ -291,6 +316,8 @@ export const CourseMaterials = ({
                         max_points: parseInt(value) || 0,
                       })
                     }
+                    variant="bordered"
+                    radius="lg"
                   />
                 )}
               </div>
@@ -302,17 +329,24 @@ export const CourseMaterials = ({
                   setMaterialForm({ ...materialForm, due_date: value })
                 }
                 isRequired
+                variant="bordered"
+                radius="lg"
               />
             </div>
           </ModalBody>
           <ModalFooter>
-            <Button variant="bordered" onPress={addDisclosure.onClose}>
+            <Button
+              variant="flat"
+              onPress={addDisclosure.onClose}
+              radius="full"
+            >
               Cancel
             </Button>
             <Button
               color="primary"
               onPress={handleAddMaterial}
               isDisabled={!materialForm.name || !materialForm.due_date}
+              radius="full"
             >
               Add Material
             </Button>
@@ -328,9 +362,14 @@ export const CourseMaterials = ({
         isOpen={editDisclosure.isOpen}
         onClose={editDisclosure.onClose}
         size="lg"
+        backdrop="blur"
+        className="rounded-lg"
       >
         <ModalContent>
-          <ModalHeader>Edit course material</ModalHeader>
+          <ModalHeader className="flex flex-col gap-1">
+            <h3 className="text-xl">Edit Course Material</h3>
+            <p className="text-sm text-default-500">Update material details</p>
+          </ModalHeader>
           <ModalBody>
             <div className="grid grid-cols-1 gap-4">
               <Input
@@ -341,6 +380,8 @@ export const CourseMaterials = ({
                   setMaterialForm({ ...materialForm, name: value })
                 }
                 isRequired
+                variant="bordered"
+                radius="lg"
               />
               <Textarea
                 label="Description"
@@ -349,10 +390,13 @@ export const CourseMaterials = ({
                 onValueChange={(value) =>
                   setMaterialForm({ ...materialForm, description: value })
                 }
+                variant="bordered"
+                radius="lg"
+                minRows={3}
               />
               <div className="grid grid-cols-2 gap-4">
                 <select
-                  className="border rounded p-2"
+                  className="border rounded-lg p-2"
                   value={materialForm.type}
                   onChange={(e) =>
                     setMaterialForm({
@@ -381,6 +425,8 @@ export const CourseMaterials = ({
                         max_points: parseInt(value) || 0,
                       })
                     }
+                    variant="bordered"
+                    radius="lg"
                   />
                 )}
               </div>
@@ -392,17 +438,24 @@ export const CourseMaterials = ({
                   setMaterialForm({ ...materialForm, due_date: value })
                 }
                 isRequired
+                variant="bordered"
+                radius="lg"
               />
             </div>
           </ModalBody>
           <ModalFooter>
-            <Button variant="bordered" onPress={editDisclosure.onClose}>
+            <Button
+              variant="flat"
+              onPress={editDisclosure.onClose}
+              radius="full"
+            >
               Cancel
             </Button>
             <Button
               color="primary"
               onPress={handleUpdateMaterial}
               isDisabled={!materialForm.name || !materialForm.due_date}
+              radius="full"
             >
               Update Material
             </Button>
@@ -413,15 +466,21 @@ export const CourseMaterials = ({
   };
 
   return (
-    <div className="mb-6">
+    <div className="mb-6 mt-6">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Course Materials</h2>
+        <h2 className="text-xl font-semibold flex items-center">
+          <span className="bg-primary-100 text-primary-500 p-2 rounded-full mr-2">
+            <IconFileText size={20} />
+          </span>
+          Course Materials
+        </h2>
         {isProfessor() && (
           <Button
             color="primary"
-            variant="light"
+            variant="flat"
             startContent={<IconPlus size={18} />}
             onPress={addDisclosure.onOpen}
+            radius="full"
           >
             Add Material
           </Button>
@@ -430,41 +489,56 @@ export const CourseMaterials = ({
 
       {isLoading ? (
         <div className="flex justify-center items-center h-40">
-          <Spinner size="md" />
+          <Spinner size="md" color="primary" />
         </div>
       ) : courseItems.length > 0 ? (
         <div className="grid grid-cols-1 gap-4">
           {courseItems.map((item) => (
-            <Card key={item.id} className="border border-default-200">
-              <CardBody className="flex flex-row justify-between items-center">
+            <Card
+              key={item.id}
+              className="border-none shadow-sm hover:shadow-md transition-all transform hover:-translate-y-1 bg-gradient-to-r from-white to-default-50"
+              radius="lg"
+            >
+              <CardBody className="flex flex-row justify-between items-center p-4">
                 <div className="flex gap-4 items-center">
-                  <div className="bg-default-100 p-3 rounded-lg">
+                  <div
+                    className={`bg-${getMaterialChipColor(item.type)}-100 p-3 rounded-lg text-${getMaterialChipColor(item.type)}-500`}
+                  >
                     {renderMaterialIcon(item.type)}
                   </div>
                   <div>
-                    <div className="flex gap-2 items-center">
+                    <div className="flex gap-2 items-center mb-1">
                       <h3 className="font-semibold">{item.name}</h3>
-                      <Chip size="sm" color="primary">
+                      <Chip
+                        size="sm"
+                        color={getMaterialChipColor(item.type)}
+                        radius="full"
+                      >
                         {item.type.charAt(0).toUpperCase() + item.type.slice(1)}
                       </Chip>
                     </div>
                     {item.description && (
-                      <p className="text-sm text-default-600">
+                      <p className="text-sm text-default-600 mb-1">
                         {item.description}
                       </p>
                     )}
-                    <p className="text-xs text-default-500">
-                      Due: {formatDueDate(item.due_date)}
-                      {item.type !== "document" &&
-                        ` · ${item.max_points} points`}
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-xs text-default-500 bg-default-100 px-2 py-1 rounded-full">
+                        Due: {formatDueDate(item.due_date)}
+                      </p>
+                      {item.type !== "document" && (
+                        <p className="text-xs text-default-500 bg-default-100 px-2 py-1 rounded-full">
+                          {item.max_points} points
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
                 <div className="flex">
                   {isProfessor() && (
                     <Dropdown>
                       <DropdownTrigger>
-                        <Button isIconOnly variant="light">
+                        <Button isIconOnly variant="light" radius="full">
                           <IconDotsVertical size={18} />
                         </Button>
                       </DropdownTrigger>
@@ -494,11 +568,16 @@ export const CourseMaterials = ({
           ))}
         </div>
       ) : (
-        <div className="bg-default-100 rounded-lg p-6 text-center">
-          <p className="text-default-600">
-            No course materials have been added yet.
-          </p>
-        </div>
+        <Card
+          radius="lg"
+          className="border-dashed border-2 border-default-200 bg-default-50 p-6 text-center"
+        >
+          <CardBody>
+            <p className="text-default-600">
+              No course materials have been added yet.
+            </p>
+          </CardBody>
+        </Card>
       )}
 
       {renderAddMaterialModal()}

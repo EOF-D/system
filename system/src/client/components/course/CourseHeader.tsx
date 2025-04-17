@@ -119,22 +119,34 @@ export const CourseHeader = ({
 
   return (
     <>
-      <Card className="mb-6">
-        <CardHeader className="flex justify-between bg-default-100">
+      <Card className="mb-6 border-none shadow-md overflow-hidden rounded-xl bg-gradient-to-r from-primary-50 via-white to-default-50">
+        <CardHeader className="flex justify-between bg-white bg-opacity-80 backdrop-blur-sm pb-3">
           <div>
-            <h1 className="text-2xl font-bold">
-              {course.prefix}-{course.number}: {course.name}
-            </h1>
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-bold text-primary-600">
+                {course.prefix}-{course.number}
+              </h1>
+              <Chip color="primary" size="sm" radius="full">
+                {course.name}
+              </Chip>
+            </div>
             {isStudentCourse(course) && (
-              <p className="text-default-600">
-                Professor: {course.professor_full_name}
+              <p className="text-default-600 mt-1 flex items-center gap-1">
+                <span className="bg-primary-100 text-primary-600 p-1 rounded-md text-xs">
+                  PROFESSOR
+                </span>
+                <span className="font-medium">
+                  {course.professor_full_name}
+                </span>
               </p>
             )}
           </div>
           {isProfessor() && (
             <Dropdown>
               <DropdownTrigger>
-                <Button variant="light">Actions</Button>
+                <Button variant="flat" color="primary" radius="full">
+                  Actions
+                </Button>
               </DropdownTrigger>
               <DropdownMenu>
                 <DropdownItem
@@ -155,33 +167,33 @@ export const CourseHeader = ({
             </Dropdown>
           )}
         </CardHeader>
-        <CardBody>
+        <CardBody className="py-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="flex items-center gap-2">
-              <IconMapPin size={18} className="text-default-500" />
-              <span>Room: {course.room}</span>
+            <div className="flex items-center gap-2 bg-white bg-opacity-60 p-3 rounded-lg shadow-sm">
+              <IconMapPin size={18} className="text-primary-500" />
+              <span className="font-medium">Room: {course.room}</span>
             </div>
-            <div className="flex items-center gap-2">
-              <IconCalendarTime size={18} className="text-default-500" />
-              <span>
+            <div className="flex items-center gap-2 bg-white bg-opacity-60 p-3 rounded-lg shadow-sm">
+              <IconCalendarTime size={18} className="text-primary-500" />
+              <span className="font-medium">
                 {formatTime(course.start_time)} - {formatTime(course.end_time)}
               </span>
             </div>
-            <div className="flex items-center gap-2">
-              <IconBook size={18} className="text-default-500" />
-              <span>{formatDays(course.days)}</span>
+            <div className="flex items-center gap-2 bg-white bg-opacity-60 p-3 rounded-lg shadow-sm">
+              <IconBook size={18} className="text-primary-500" />
+              <span className="font-medium">{formatDays(course.days)}</span>
             </div>
           </div>
         </CardBody>
         {isProfessorCourse(course) && (
           <>
             <Divider />
-            <CardFooter>
+            <CardFooter className="pt-2">
               <div className="flex gap-4">
-                <Chip color="primary" size="sm">
+                <Chip color="primary" size="sm" radius="full" variant="flat">
                   {course.enrollment_count} Students
                 </Chip>
-                <Chip variant="flat" size="sm">
+                <Chip variant="flat" size="sm" radius="full">
                   {totalItems} Materials
                 </Chip>
               </div>
@@ -190,14 +202,21 @@ export const CourseHeader = ({
         )}
       </Card>
 
-      <Modal isOpen={isInviteOpen} onClose={onInviteClose}>
+      <Modal
+        isOpen={isInviteOpen}
+        onClose={onInviteClose}
+        backdrop="blur"
+        className="rounded-lg"
+      >
         <ModalContent>
           <ModalHeader>
-            Invite students to {course.prefix} {course.number}
+            <h3 className="text-xl">
+              Invite students to {course.prefix} {course.number}
+            </h3>
           </ModalHeader>
           <ModalBody>
             {inviteError && (
-              <div className="bg-danger-100 text-danger-700 p-3 rounded-lg mb-4">
+              <div className="bg-danger-50 text-danger-700 p-3 rounded-lg mb-4">
                 {inviteError}
               </div>
             )}
@@ -209,10 +228,12 @@ export const CourseHeader = ({
               type="email"
               isRequired
               description="Enter the student's university email address"
+              variant="bordered"
+              radius="lg"
             />
           </ModalBody>
           <ModalFooter>
-            <Button variant="bordered" onPress={onInviteClose}>
+            <Button variant="flat" onPress={onInviteClose} radius="full">
               Cancel
             </Button>
             <Button
@@ -220,6 +241,7 @@ export const CourseHeader = ({
               onPress={handleInviteStudent}
               isLoading={inviteLoading}
               isDisabled={!inviteEmail || inviteLoading}
+              radius="full"
             >
               Send Invitation
             </Button>
