@@ -13,11 +13,13 @@ const API_URL = `${SiteConfig.apiUrl}/enrollments`;
 export interface EnrollmentResponse {
   /**
    * Indicates if the request was successful.
+   * @type {boolean}
    */
   success: boolean;
 
   /**
    * The data returned by the API.
+   * @type {Enrollment | Enrollment[] | EnrollmentWithCourseDetails[] | EnrollmentWithStudentDetails[]}
    */
   data?:
     | Enrollment
@@ -27,6 +29,7 @@ export interface EnrollmentResponse {
 
   /**
    * Message returned by the API.
+   * @type {string | undefined}
    */
   message?: string;
 }
