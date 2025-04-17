@@ -368,5 +368,3 @@ export const LoginModal: FC<{
     </Modal>
   );
 };
-
-export default LoginModal;
