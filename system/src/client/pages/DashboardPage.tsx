@@ -66,7 +66,7 @@ export function DashboardPage(): JSX.Element {
   >([]);
 
   const [invitations, setInvitations] = useState<EnrollmentWithCourseDetails[]>(
-    [],
+    []
   );
 
   const [isCoursesLoading, setIsCoursesLoading] = useState(true);
@@ -130,7 +130,7 @@ export function DashboardPage(): JSX.Element {
       const response = await getCourses();
       if (response.success && response.data) {
         setCourses(
-          response.data as CourseWithEnrollments[] | CourseWithProfessor[],
+          response.data as CourseWithEnrollments[] | CourseWithProfessor[]
         );
       } else {
         setError(response.message || "Failed to fetch courses");
@@ -407,7 +407,7 @@ export function DashboardPage(): JSX.Element {
   };
 
   const renderCourseCard = (
-    course: CourseWithEnrollments | CourseWithProfessor,
+    course: CourseWithEnrollments | CourseWithProfessor
   ) => {
     return (
       <Card

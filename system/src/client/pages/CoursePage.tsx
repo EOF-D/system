@@ -75,7 +75,7 @@ export function CoursePage(): JSX.Element {
       const response = await getCourseEnrollments(courseId);
       if (response.success && response.data) {
         setEnrollments(
-          Array.isArray(response.data) ? response.data : [response.data],
+          Array.isArray(response.data) ? response.data : [response.data]
         );
       } else {
         console.error(`Error fetching enrollments: ${response.message}`);
@@ -152,26 +152,23 @@ export function CoursePage(): JSX.Element {
           onMaterialAdd={materialDisclosure.onOpen}
         />
 
-        <div style={{ paddingTop: "10px" }}>
-          <Tabs
-            className="radius-lg"
-            aria-label="Course sections"
-            color="primary"
-            variant="solid"
-            classNames={{
-              tabList: "backdrop-blur-md rounded-xl p-1 shadow-sm",
-            }}
-          >
-            <Tab
-              key="materials"
-              title={
-                <div className="flex items-center gap-2 p-2">
-                  <IconFileText size={18} />
-                  <span>Materials</span>
-                </div>
-              }
+        <div style={{ paddingTop: "10px", paddingBottom: "10px" }}>
+          <Card>
+            <Tabs
+              className="radius-lg"
+              aria-label="Course sections"
+              color="primary"
+              variant="solid"
             >
-              <Card>
+              <Tab
+                key="materials"
+                title={
+                  <div className="flex items-center gap-2 p-2">
+                    <IconFileText size={18} />
+                    <span>Materials</span>
+                  </div>
+                }
+              >
                 <CourseMaterials
                   courseId={courseId}
                   courseItems={courseItems}
@@ -179,29 +176,27 @@ export function CoursePage(): JSX.Element {
                   onItemsChange={fetchCourseItems}
                   modalDisclosure={materialDisclosure}
                 />
-              </Card>
-            </Tab>
+              </Tab>
 
-            {isProfessor() && (
-              <Tab
-                key="students"
-                title={
-                  <div className="flex items-center gap-2 p-2">
-                    <IconUsers size={18} />
-                    <span>Students</span>
-                  </div>
-                }
-              >
-                <Card>
+              {isProfessor() && (
+                <Tab
+                  key="students"
+                  title={
+                    <div className="flex items-center gap-2 p-2">
+                      <IconUsers size={18} />
+                      <span>Students</span>
+                    </div>
+                  }
+                >
                   <CourseStudents
                     courseId={courseId}
                     enrollments={enrollments}
                     onInviteSuccess={fetchEnrollments}
                   />
-                </Card>
-              </Tab>
-            )}
-          </Tabs>
+                </Tab>
+              )}
+            </Tabs>
+          </Card>
         </div>
       </div>
     </Layout>

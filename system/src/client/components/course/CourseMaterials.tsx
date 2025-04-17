@@ -176,7 +176,7 @@ export const CourseMaterials = ({
       const response = await updateCourseItem(
         courseId,
         materialForm.id,
-        itemData,
+        itemData
       );
       if (response.success) {
         onItemsChange();
@@ -574,14 +574,11 @@ export const CourseMaterials = ({
           ))}
         </div>
       ) : (
-        <Card radius="lg" className="bg-default-50 p-6 text-center">
-          <Divider />
-          <CardBody>
-            <p className="text-default-600">
-              No course materials have been added yet.
-            </p>
-          </CardBody>
-        </Card>
+        <div className="flex flex-col items-center justify-center h-40">
+          <p className="text-default-600">
+            No course materials have been added yet.
+          </p>
+        </div>
       )}
 
       {renderAddMaterialModal()}

@@ -168,63 +168,69 @@ export const CourseStudents = ({
       <Divider />
 
       <Card className="shadow-sm border-none overflow-hidden" radius="lg">
-        <Table
-          aria-label="Enrolled students"
-          color="primary"
-          selectionMode="none"
-          classNames={{
-            th: "bg-default-50 text-default-700",
-            td: "py-3",
-          }}
-        >
-          <TableHeader>
-            <TableColumn>NAME</TableColumn>
-            <TableColumn>EMAIL</TableColumn>
-            <TableColumn>STATUS</TableColumn>
-            <TableColumn>JOINED</TableColumn>
-          </TableHeader>
-          <TableBody emptyContent="No students enrolled yet">
-            {enrollments.length > 0
-              ? enrollments.map((enrollment) => (
-                  <TableRow key={enrollment.id}>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Avatar
-                          name={enrollment.student_full_name}
-                          size="sm"
-                          color="primary"
-                          isBordered
-                        />
-                        <span className="font-medium">
-                          {enrollment.student_full_name}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-default-600">
-                      {enrollment.student_email}
-                    </TableCell>
-                    <TableCell>
-                      <Chip
+        {enrollments.length > 0 ? (
+          <Table
+            aria-label="Enrolled students"
+            color="primary"
+            selectionMode="none"
+            classNames={{
+              th: "bg-default-50 text-default-700",
+              td: "py-3",
+            }}
+          >
+            <TableHeader>
+              <TableColumn>NAME</TableColumn>
+              <TableColumn>EMAIL</TableColumn>
+              <TableColumn>STATUS</TableColumn>
+              <TableColumn>JOINED</TableColumn>
+            </TableHeader>
+            <TableBody emptyContent="No students enrolled yet">
+              {enrollments.map((enrollment) => (
+                <TableRow key={enrollment.id}>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Avatar
+                        name={enrollment.student_full_name}
                         size="sm"
-                        color={
-                          enrollment.status === "active" ? "success" : "default"
-                        }
-                        variant="flat"
-                        radius="full"
-                      >
-                        {enrollment.status}
-                      </Chip>
-                    </TableCell>
-                    <TableCell>
-                      <span className="text-default-500">
-                        {formatDate(enrollment.enrollment_date)}
+                        color="primary"
+                        isBordered
+                      />
+                      <span className="font-medium">
+                        {enrollment.student_full_name}
                       </span>
-                    </TableCell>
-                  </TableRow>
-                ))
-              : []}
-          </TableBody>
-        </Table>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-default-600">
+                    {enrollment.student_email}
+                  </TableCell>
+                  <TableCell>
+                    <Chip
+                      size="sm"
+                      color={
+                        enrollment.status === "active" ? "success" : "default"
+                      }
+                      variant="flat"
+                      radius="full"
+                    >
+                      {enrollment.status}
+                    </Chip>
+                  </TableCell>
+                  <TableCell>
+                    <span className="text-default-500">
+                      {formatDate(enrollment.enrollment_date)}
+                    </span>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        ) : (
+          <div className="flex flex-col items-center justify-center h-40">
+            <p className="text-default-600">
+              No students have been enrolled yet.
+            </p>
+          </div>
+        )}
       </Card>
 
       {renderInviteStudentModal()}
