@@ -302,22 +302,21 @@ export function ProfilePage(): JSX.Element {
               </CardBody>
             </Card>
           </div>
-          <div style={{ padding: "0px" }}>
-            <Card className="mb-6 shadow-md overflow-hidden border border-default-200">
-              <Tabs
-                className="bg-default-200 dark:bg-default-100 rounded-lg"
-                color="primary"
-                variant="solid"
-              >
-                <Tab key="created_at" title="Created at">
-                  <Calendar value={handleDate(user!.created_at)} />
-                </Tab>
-                <Tab key="updated_at" title="Updated at">
-                  <Calendar value={handleDate(user!.updated_at)} />
-                </Tab>
-              </Tabs>
-            </Card>
-          </div>
+          <Card className="shadow-md border border-default-200">
+            <Tabs
+              className="bg-default-200 dark:bg-default-100 p-1"
+              fullWidth
+              color="primary"
+              variant="solid"
+            >
+              <Tab key="created_at" title="Created At">
+                <Calendar value={handleDate(user!.created_at)} />
+              </Tab>
+              <Tab key="updated_at" title="Updated At">
+                <Calendar value={handleDate(user!.updated_at)} />
+              </Tab>
+            </Tabs>
+          </Card>
         </div>
       </div>
     </Layout>
