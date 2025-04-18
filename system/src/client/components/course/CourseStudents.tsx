@@ -231,6 +231,7 @@ export const CourseStudents = ({
             </p>
           </div>
         )}
+        <Divider style={{ marginBottom: "25px" }} />
       </Card>
 
       {renderInviteStudentModal()}

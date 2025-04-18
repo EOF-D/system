@@ -572,6 +572,7 @@ export const CourseMaterials = ({
               </CardBody>
             </Card>
           ))}
+          <Divider style={{ marginBottom: "25px" }} />
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center h-40">
