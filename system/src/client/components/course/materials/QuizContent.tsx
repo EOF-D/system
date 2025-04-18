@@ -473,7 +473,7 @@ export const QuizContent = ({
               {currentQuestion.options.map((option) => (
                 <Radio key={option.id} value={option.id.toString()}>
                   {option.option_text}
-                  {isProfessorMode && option.is_correct && " (Correct)"}
+                  {isProfessorMode && option.is_correct ? " (Correct)" : ""}
                 </Radio>
               ))}
             </RadioGroup>
