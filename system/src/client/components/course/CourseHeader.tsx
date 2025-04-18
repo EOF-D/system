@@ -1,3 +1,4 @@
+import { useAuth } from "@/client/context/auth";
 import { isProfessor } from "@/client/services/authService";
 import { inviteStudent } from "@/client/services/enrollmentService";
 import { formatDays, formatTime } from "@/client/utils/format";
@@ -81,7 +82,7 @@ export const CourseHeader = ({
     onOpen: onInviteOpen,
     onClose: onInviteClose,
   } = useDisclosure();
-
+  const { user } = useAuth();
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteLoading, setInviteLoading] = useState(false);
   const [inviteError, setInviteError] = useState<string | null>(null);
@@ -166,7 +167,9 @@ export const CourseHeader = ({
               <IconUser size={18} className="text-primary-500" />
               <span className="font-medium">
                 Professor:{" "}
-                {isStudentCourse(course) ? course.professor_full_name : "N/A"}
+                {isStudentCourse(course)
+                  ? course.professor_full_name
+                  : user!.first_name + " " + user!.last_name}
               </span>
             </div>
             <div className="flex items-center gap-2 bg-opacity-60 rounded-lg shadow-sm py-2">
