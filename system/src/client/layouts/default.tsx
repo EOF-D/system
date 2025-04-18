@@ -16,7 +16,10 @@ export function Layout({
   return (
     <div className="relative flex flex-col h-screen">
       <Navbar activePage={page} />
-      <main className="container max-w-7xl px-6 flex-grow pt-16">
+      <main
+        className="container max-w-7xl px-6 flex-grow pt-16"
+        style={{ paddingTop: "40px" }}
+      >
         {children}
       </main>
     </div>

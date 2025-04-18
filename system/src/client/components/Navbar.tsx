@@ -21,8 +21,8 @@ export const Navbar: FC<{ activePage: string }> = ({
   const { isLoggedIn, logout } = useAuth();
 
   return (
-    <HeroNavbar>
-      <NavbarContent className="sm:flex gap-4" justify="center">
+    <HeroNavbar maxWidth="full">
+      <NavbarContent justify="start">
         <NavbarItem isActive={activePage === "Home"}>
           <Link color="foreground" href="/" underline="always">
             Home
