@@ -326,7 +326,7 @@ export const QuizContent = ({
             <h3 className="text-xl font-semibold">Add New Question</h3>
           </ModalHeader>
           <ModalBody>
-            <div className="space-y-4">
+            <div className="flex flex-col gap-4">
               <Textarea
                 label="Question Text"
                 placeholder="Enter your question here..."
@@ -373,8 +373,11 @@ export const QuizContent = ({
               </div>
 
               {newQuestion.type === "multiple_choice" && (
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
+                <div>
+                  <div
+                    className="flex justify-between items-center"
+                    style={{ marginBottom: "20px" }}
+                  >
                     <h4 className="text-md font-medium">Answer Options</h4>
                     <Button
                       size="sm"
@@ -382,6 +385,7 @@ export const QuizContent = ({
                       variant="flat"
                       onPress={handleAddOption}
                     >
+                      <IconPlus size={16} />
                       Add Option
                     </Button>
                   </div>
@@ -394,7 +398,7 @@ export const QuizContent = ({
                         aria-label="Correct answer"
                       />
                       <Input
-                        className="flex-1"
+                        className="flex-1 mb-2"
                         placeholder={`Option ${index + 1}`}
                         value={option.text}
                         onValueChange={(value) =>
