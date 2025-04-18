@@ -12,15 +12,7 @@ import {
   CourseWithProfessor,
 } from "@/shared/types/models/course";
 import { CourseItem } from "@/shared/types/models/courseItem";
-import {
-  Button,
-  Spinner,
-  Tab,
-  Tabs,
-  Card,
-  useDisclosure,
-  Divider,
-} from "@heroui/react";
+import { Button, Spinner, Tab, Tabs, Card, useDisclosure } from "@heroui/react";
 import { IconFileText, IconUsers } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -161,9 +153,9 @@ export function CoursePage(): JSX.Element {
         />
 
         <div style={{ paddingTop: "10px", paddingBottom: "10px" }}>
-          <Card>
+          <Card className="mb-6 shadow-md overflow-hidden border border-default-200">
             <Tabs
-              className="bg-default-200 dark:bg-default-200 p-1"
+              className="bg-default-200 dark:bg-default-100 p-1"
               aria-label="Course sections"
               color="primary"
               variant="solid"

@@ -332,7 +332,7 @@ export const LoginModal: FC<{
   return (
     <Modal
       backdrop="opaque"
-      className="py-5 rounded-lg"
+      className="rounded-lg"
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       placement="center"
@@ -342,8 +342,8 @@ export const LoginModal: FC<{
         {() => (
           <>
             <ModalBody>
-              <Card className="border-none shadow-none">
-                <CardBody className="overflow-hidden p-0">
+              <Card className="shadow-none" style={{ padding: "20px" }}>
+                <CardBody className="overflow-hidden">
                   <Tabs
                     fullWidth
                     selectedKey={selected}

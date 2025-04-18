@@ -394,7 +394,10 @@ export function DashboardPage(): JSX.Element {
             ))}
           </div>
         ) : (
-          <Card radius="lg" className="bg-default-50 text-center p-6 mb-10">
+          <Card
+            radius="lg"
+            className="bg-default-50 text-center p-6 mb-10 border border-default-200"
+          >
             <CardBody>
               <p className="text-default-600">
                 You don't have any pending invitations.
@@ -412,7 +415,7 @@ export function DashboardPage(): JSX.Element {
     return (
       <Card
         key={course.id}
-        className="border-none shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1 bg-gradient-to-br from-default-50 to-default-100"
+        className="shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1 bg-gradient-to-br from-default-50 to-default-100 border border-default-200"
         isPressable
         radius="lg"
         onPress={() => {
@@ -565,7 +568,10 @@ export function DashboardPage(): JSX.Element {
             <Spinner size="lg" color="primary" />
           </div>
         ) : courses.length === 0 ? (
-          <Card radius="lg" className="bg-default-50 text-center">
+          <Card
+            radius="lg"
+            className="bg-default-50 text-center border border-default-200"
+          >
             <CardBody>
               <p className="text-default-600 mb-4">
                 {isProfessor()

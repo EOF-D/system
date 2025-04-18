@@ -169,7 +169,7 @@ export function ProfilePage(): JSX.Element {
       <div className="flex justify-center items-center w-full">
         <div className="flex flex-row items-start gap-4 max-w-3xl">
           <div className="w-96">
-            <Card className="w-full shadow-sm">
+            <Card className="w-full shadow-sm border border-default-200">
               <CardHeader className="flex justify-between items-center">
                 <User
                   description={user!.email}

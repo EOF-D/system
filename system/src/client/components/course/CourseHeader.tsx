@@ -30,6 +30,7 @@ import {
   IconCalendarTime,
   IconMapPin,
   IconPlus,
+  IconUser,
   IconUserPlus,
 } from "@tabler/icons-react";
 import { useState } from "react";
@@ -119,32 +120,19 @@ export const CourseHeader = ({
 
   return (
     <>
-      <Card className="mb-6 border-none shadow-md overflow-hidden rounded-xl bg-gradient-to-r from-primary-50 via-white to-default-50">
-        <CardHeader className="flex justify-between bg-white bg-opacity-80 backdrop-blur-sm pb-3">
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-bold text-primary-600">
-                {course.prefix}-{course.number}
-              </h1>
-              <Chip color="primary" size="sm" radius="full">
-                {course.name}
-              </Chip>
-            </div>
-            {isStudentCourse(course) && (
-              <p className="text-default-600 mt-1 flex items-center gap-1">
-                <span className="bg-primary-100 text-primary-600 p-1 rounded-md text-xs">
-                  PROFESSOR
-                </span>
-                <span className="font-medium">
-                  {course.professor_full_name}
-                </span>
-              </p>
-            )}
+      <Card className="mb-6 overflow-hidden shadow-md border border-default-200">
+        <CardHeader className="flex justify-between bg-opacity-80 backdrop-blur-sm bg-default-200 dark:bg-default-100">
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl font-bold">
+              <span className="rounded-md">
+                {course.prefix}-{course.number}: {course.name}
+              </span>
+            </h1>
           </div>
           {isProfessor() && (
             <Dropdown>
               <DropdownTrigger>
-                <Button variant="flat" color="primary" radius="full">
+                <Button variant="flat" color="primary" radius="full" size="sm">
                   Actions
                 </Button>
               </DropdownTrigger>
@@ -167,19 +155,29 @@ export const CourseHeader = ({
             </Dropdown>
           )}
         </CardHeader>
-        <CardBody className="py-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="flex items-center gap-2 bg-white bg-opacity-60 p-3 rounded-lg shadow-sm">
+        <CardBody className="py-3 px-1">
+          <div
+            className="grid grid-cols-1 md:grid-cols-3 gap-1"
+            style={{ paddingLeft: "20px" }}
+          >
+            <div className="flex items-center gap-2 bg-opacity-60 rounded-lg shadow-sm py-2">
+              <IconUser size={18} className="text-primary-500" />
+              <span className="font-medium">
+                Professor:{" "}
+                {isStudentCourse(course) ? course.professor_full_name : "N/A"}
+              </span>
+            </div>
+            <div className="flex items-center gap-2 bg-opacity-60 rounded-lg shadow-sm py-2">
               <IconMapPin size={18} className="text-primary-500" />
               <span className="font-medium">Room: {course.room}</span>
             </div>
-            <div className="flex items-center gap-2 bg-white bg-opacity-60 p-3 rounded-lg shadow-sm">
+            <div className="flex items-center gap-2 bg-opacity-60 rounded-lg shadow-sm py-2">
               <IconCalendarTime size={18} className="text-primary-500" />
               <span className="font-medium">
                 {formatTime(course.start_time)} - {formatTime(course.end_time)}
               </span>
             </div>
-            <div className="flex items-center gap-2 bg-white bg-opacity-60 p-3 rounded-lg shadow-sm">
+            <div className="flex items-center gap-2 bg-opacity-60 rounded-lg shadow-sm py-2">
               <IconBook size={18} className="text-primary-500" />
               <span className="font-medium">{formatDays(course.days)}</span>
             </div>
