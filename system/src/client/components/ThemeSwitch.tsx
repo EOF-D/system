@@ -1,4 +1,4 @@
-import { Switch } from "@heroui/react";
+import { Button } from "@heroui/react";
 import { useTheme } from "@heroui/use-theme";
 import {
   IconBrightnessDown,
@@ -8,9 +8,10 @@ import { useEffect, useState } from "react";
 
 /**
  * ThemeSwitch component that allows users to toggle between light and dark themes.
+ * @returns {JSX.Element | null} The ThemeSwitch component or null if not mounted.
  */
-export const ThemeSwitch = () => {
-  const [isSelected, setIsSelected] = useState(false);
+export const ThemeSwitch = (): JSX.Element | null => {
+  const [isLightMode, setIsLightMode] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const { theme, setTheme } = useTheme();
 
@@ -19,31 +20,32 @@ export const ThemeSwitch = () => {
 
     // Check if the theme is set to "dark" or "light".
     if (theme === "light") {
-      setIsSelected(true);
+      setIsLightMode(true);
     }
   }, []);
 
   if (!isMounted) return null;
 
   const handleThemeChange = () => {
-    setIsSelected(!isSelected);
-    setTheme(isSelected ? "dark" : "light");
+    const newTheme = isLightMode ? "dark" : "light";
+    setIsLightMode(!isLightMode);
+    setTheme(newTheme);
   };
 
   return (
-    <Switch
-      isSelected={isSelected}
-      onValueChange={handleThemeChange}
-      defaultSelected
+    <Button
+      isIconOnly
+      variant="light"
+      onPress={handleThemeChange}
+      className="rounded-full"
       color="primary"
-      size="lg"
-      thumbIcon={({ isSelected, className }) =>
-        isSelected ? (
-          <IconBrightnessDownFilled className={className} />
-        ) : (
-          <IconBrightnessDown className={className} />
-        )
-      }
-    ></Switch>
+      size="sm"
+    >
+      {isLightMode ? (
+        <IconBrightnessDownFilled size={24} />
+      ) : (
+        <IconBrightnessDown size={24} />
+      )}
+    </Button>
   );
 };
