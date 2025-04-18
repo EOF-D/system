@@ -331,7 +331,10 @@ export const LoginModal: FC<{
 
   return (
     <Modal
-      backdrop="opaque"
+      classNames={{
+        backdrop:
+          "bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20",
+      }}
       className="rounded-lg"
       isOpen={isOpen}
       onOpenChange={onOpenChange}

@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
+import { logger } from "../../shared/utils/logger";
 import { CourseItemModel } from "../models/courseItemModel";
 import { CourseModel } from "../models/courseModel";
+import { EnrollmentModel } from "../models/enrollmentModel";
 import { QuizModel } from "../models/quizModel";
 import { SubmissionModel } from "../models/submissionModel";
-import { logger } from "../../shared/utils/logger";
 
 /**
  * Create a new quiz question.
@@ -132,16 +133,10 @@ export const submitQuizResponse = async (req: Request, res: Response) => {
     }
 
     // Verify the submission belongs to the user.
-    const student_id = req.user.id;
-    const enrollments = await CourseModel.getEnrollmentsForCourse(
-      submission.item_id
-    );
+    const enrollments = await EnrollmentModel.getByStudentId(req.user.id);
+    const enrollmentIds = enrollments.map((e) => e.id);
 
-    const userEnrollment = enrollments.find(
-      (e) => e.student_id === student_id && e.id === submission.enrollment_id
-    );
-
-    if (!userEnrollment) {
+    if (!enrollmentIds.includes(submission.enrollment_id)) {
       res.status(403).json({
         success: false,
         message: "You don't have permission to submit a response for this quiz",

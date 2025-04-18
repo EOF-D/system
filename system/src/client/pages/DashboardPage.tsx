@@ -426,7 +426,7 @@ export function DashboardPage(): JSX.Element {
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
               <h3 className="text-lg font-bold text-primary-500">
-                {course.prefix}-{course.number}
+                {course.prefix}-{course.number}: {course.name}
               </h3>
               {isStudentCourse(course) && (
                 <Chip size="sm" variant="flat" color="primary" radius="full">
@@ -434,9 +434,6 @@ export function DashboardPage(): JSX.Element {
                 </Chip>
               )}
             </div>
-            <p className="text-md text-default-700 font-medium mt-1">
-              {course.name}
-            </p>
           </div>
           {isProfessor() && (
             <Dropdown>
@@ -596,7 +593,10 @@ export function DashboardPage(): JSX.Element {
         isOpen={isCreateOpen}
         onClose={onCreateClose}
         size="lg"
-        backdrop="blur"
+        classNames={{
+          backdrop:
+            "bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20",
+        }}
         className="rounded-lg"
       >
         <ModalContent>
@@ -710,7 +710,10 @@ export function DashboardPage(): JSX.Element {
       <Modal
         isOpen={isInviteOpen}
         onClose={onInviteClose}
-        backdrop="blur"
+        classNames={{
+          backdrop:
+            "bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20",
+        }}
         className="rounded-lg"
       >
         <ModalContent>

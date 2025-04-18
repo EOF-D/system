@@ -27,6 +27,8 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  Select,
+  SelectItem,
   Spinner,
   Textarea,
   useDisclosure,
@@ -330,8 +332,11 @@ export const CourseMaterials = ({
         isOpen={addDisclosure.isOpen}
         onClose={addDisclosure.onClose}
         size="lg"
-        backdrop="blur"
-        className="rounded-lg"
+        classNames={{
+          backdrop:
+            "bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20",
+        }}
+        radius="lg"
       >
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">
@@ -366,8 +371,9 @@ export const CourseMaterials = ({
                 minRows={3}
               />
               <div className="grid grid-cols-2 gap-4">
-                <select
-                  className="border rounded-lg p-2"
+                <Select
+                  label="Material Type"
+                  placeholder="Document"
                   value={materialForm.type}
                   onChange={(e) =>
                     setMaterialForm({
@@ -378,11 +384,13 @@ export const CourseMaterials = ({
                         | "quiz",
                     })
                   }
+                  variant="bordered"
                 >
-                  <option value="document">Document</option>
-                  <option value="assignment">Assignment</option>
-                  <option value="quiz">Quiz</option>
-                </select>
+                  <SelectItem key="document">Document</SelectItem>
+                  <SelectItem key="assignment">Assignment</SelectItem>
+                  <SelectItem key="quiz">Quiz</SelectItem>
+                </Select>
+
                 {materialForm.type !== "document" && (
                   <Input
                     type="number"
@@ -442,8 +450,11 @@ export const CourseMaterials = ({
         isOpen={editDisclosure.isOpen}
         onClose={editDisclosure.onClose}
         size="lg"
-        backdrop="blur"
-        className="rounded-lg"
+        classNames={{
+          backdrop:
+            "bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20",
+        }}
+        radius="lg"
       >
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">
@@ -553,12 +564,17 @@ export const CourseMaterials = ({
         onClose={handleCloseItemView}
         size="5xl"
         scrollBehavior="inside"
+        classNames={{
+          backdrop:
+            "bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20",
+        }}
+        radius="lg"
       >
         <ModalContent>
           <>
             {selectedItem && (
               <>
-                <ModalHeader className="rounded-lg bg-default-100 flex justify-between items-center">
+                <ModalHeader className="rounded-lg rounded-b-none bg-default-100 flex justify-between items-center p-4 bg-default-200 dark:bg-default-100">
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2">
                       <h2 className="text-xl font-semibold">
