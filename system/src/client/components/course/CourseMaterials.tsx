@@ -1,16 +1,22 @@
+import { QuizContent } from "@/client/components/course/materials/QuizContent";
+import { useAuth } from "@/client/context/auth";
 import { isProfessor } from "@/client/services/authService";
 import {
   createCourseItem,
   deleteCourseItem,
+  getCourseItemById,
   updateCourseItem,
 } from "@/client/services/courseItemService";
+import { getCourseEnrollments } from "@/client/services/enrollmentService";
 import { formatDueDate } from "@/client/utils/format";
 import { CourseItem } from "@/shared/types/models/courseItem";
+import { Enrollment } from "@/shared/types/models/enrollment";
 import {
   Button,
   Card,
   CardBody,
   Chip,
+  Divider,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -23,7 +29,6 @@ import {
   ModalHeader,
   Spinner,
   Textarea,
-  Divider,
   useDisclosure,
 } from "@heroui/react";
 import {
@@ -102,9 +107,12 @@ export const CourseMaterials = ({
   onItemsChange,
   modalDisclosure,
 }: CourseMaterialsProps): JSX.Element => {
+  const { user } = useAuth();
+  const [isProfessorMode] = useState(isProfessor());
   const localAddDisclosure = useDisclosure();
   const addDisclosure = modalDisclosure || localAddDisclosure;
   const editDisclosure = useDisclosure();
+  const itemViewDisclosure = useDisclosure();
 
   const [materialForm, setMaterialForm] = useState({
     id: 0,
@@ -114,6 +122,12 @@ export const CourseMaterials = ({
     due_date: "",
     max_points: 0,
   });
+
+  const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
+  const [selectedItem, setSelectedItem] = useState<CourseItem | null>(null);
+  const [itemLoading, setItemLoading] = useState(false);
+  const [itemError, setItemError] = useState<string | null>(null);
+  const [enrollment, setEnrollment] = useState<Enrollment | null>(null);
 
   const resetMaterialForm = () => {
     setMaterialForm({
@@ -136,6 +150,52 @@ export const CourseMaterials = ({
   useEffect(() => {
     resetMaterialForm();
   }, []);
+
+  const fetchCourseItem = async (itemId: number) => {
+    setItemLoading(true);
+    setItemError(null);
+
+    try {
+      const response = await getCourseItemById(courseId, itemId);
+
+      if (response.success) {
+        setSelectedItem(response.data as CourseItem);
+
+        // Now fetch enrollment if student.
+        if (!isProfessorMode && user) {
+          fetchEnrollment();
+        }
+      } else {
+        setItemError(response.message || "Failed to load course item");
+      }
+    } catch (error) {
+      console.error(`Error fetching course item: ${error}`);
+      setItemError("Failed to load course item. Please try again.");
+    } finally {
+      setItemLoading(false);
+    }
+  };
+
+  const fetchEnrollment = async () => {
+    // Skip for professors.
+    if (!user || isProfessorMode) return;
+
+    try {
+      const response = await getCourseEnrollments(courseId);
+
+      if (response.success && Array.isArray(response.data)) {
+        const userEnrollment = response.data.find(
+          (e) => e.student_id === user.id
+        );
+
+        if (userEnrollment) {
+          setEnrollment(userEnrollment);
+        }
+      }
+    } catch (error) {
+      console.error(`Error fetching enrollment: ${error}`);
+    }
+  };
 
   const handleAddMaterial = async () => {
     try {
@@ -217,6 +277,25 @@ export const CourseMaterials = ({
       max_points: item.max_points,
     });
     editDisclosure.onOpen();
+  };
+
+  const handleViewMaterial = (itemId: number) => {
+    setSelectedItemId(itemId);
+    fetchCourseItem(itemId);
+    itemViewDisclosure.onOpen();
+  };
+
+  const handleCloseItemView = () => {
+    setSelectedItemId(null);
+    setSelectedItem(null);
+    itemViewDisclosure.onClose();
+  };
+
+  const handleRefresh = () => {
+    if (selectedItemId) {
+      fetchCourseItem(selectedItemId);
+    }
+    onItemsChange();
   };
 
   const renderMaterialIcon = (type: string) => {
@@ -383,6 +462,7 @@ export const CourseMaterials = ({
                 isRequired
                 variant="bordered"
                 radius="lg"
+                className="mb-2"
               />
               <Textarea
                 label="Description"
@@ -466,6 +546,98 @@ export const CourseMaterials = ({
     );
   };
 
+  const renderItemViewModal = () => {
+    return (
+      <Modal
+        isOpen={itemViewDisclosure.isOpen}
+        onClose={handleCloseItemView}
+        size="5xl"
+        scrollBehavior="inside"
+      >
+        <ModalContent>
+          <>
+            {selectedItem && (
+              <>
+                <ModalHeader className="rounded-lg bg-default-100 flex justify-between items-center">
+                  <div className="flex flex-col">
+                    <div className="flex items-center gap-2">
+                      <h2 className="text-xl font-semibold">
+                        {selectedItem.name}
+                      </h2>
+                      {isProfessorMode && (
+                        <Chip
+                          size="sm"
+                          color="warning"
+                          className="ml-2"
+                          variant="flat"
+                        >
+                          Professor Mode
+                        </Chip>
+                      )}
+                    </div>
+                    <div className="flex items-center text-default-500 text-sm mt-1">
+                      <span>Due: {formatDueDate(selectedItem.due_date)}</span>
+                    </div>
+                    {selectedItem.type !== "document" && (
+                      <div className="flex items-center text-default-500 text-sm mt-1">
+                        Points: {selectedItem.max_points}
+                      </div>
+                    )}
+                  </div>
+                </ModalHeader>
+
+                <ModalBody className="p-6">
+                  {itemLoading ? (
+                    <div className="flex justify-center items-center h-64">
+                      <Spinner size="lg" color="primary" />
+                    </div>
+                  ) : itemError ? (
+                    <div className="bg-danger-50 p-4 rounded-lg text-danger-700">
+                      <p>{itemError}</p>
+                      <Button
+                        className="mt-2"
+                        color="primary"
+                        variant="flat"
+                        onPress={() => {
+                          setItemError(null);
+                          if (selectedItemId) fetchCourseItem(selectedItemId);
+                        }}
+                      >
+                        Try Again
+                      </Button>
+                    </div>
+                  ) : (
+                    <>
+                      {selectedItem.type === "quiz" ? (
+                        <QuizContent
+                          courseItem={selectedItem}
+                          enrollment={enrollment!}
+                          onSubmit={handleRefresh}
+                          onRefresh={handleRefresh}
+                        />
+                      ) : selectedItem.type === "document" ? (
+                        <div className="p-4 text-center text-default-500">
+                          <p>Document content is not available yet.</p>
+                        </div>
+                      ) : (
+                        <div className="p-4 text-center text-default-500">
+                          <p>
+                            Content for {selectedItem.type} is not available
+                            yet.
+                          </p>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </ModalBody>
+              </>
+            )}
+          </>
+        </ModalContent>
+      </Modal>
+    );
+  };
+
   return (
     <div className="mb-6 mt-6">
       <div
@@ -479,7 +651,7 @@ export const CourseMaterials = ({
           Course Materials
         </h2>
 
-        {isProfessor() && (
+        {isProfessorMode && (
           <Button
             color="primary"
             variant="flat"
@@ -502,8 +674,10 @@ export const CourseMaterials = ({
           {courseItems.map((item) => (
             <Card
               key={item.id}
-              className="border-none shadow-sm hover:shadow-md transition-all transform hover:-translate-y-1 bg-gradient-to-r from-white to-default-50"
+              className="border-none shadow-sm hover:shadow-md transition-all transform hover:-translate-y-1 bg-gradient-to-r from-white to-default-50 cursor-pointer"
               radius="lg"
+              isPressable
+              onPress={() => handleViewMaterial(item.id)}
             >
               <CardBody className="flex flex-row justify-between items-center p-4">
                 <div className="flex gap-4 items-center">
@@ -525,7 +699,9 @@ export const CourseMaterials = ({
                     </div>
                     {item.description && (
                       <p className="text-sm text-default-600 mb-1">
-                        {item.description}
+                        {item.description.length > 100
+                          ? item.description.substring(0, 100) + "..."
+                          : item.description}
                       </p>
                     )}
                     <div className="flex items-center gap-2">
@@ -540,8 +716,8 @@ export const CourseMaterials = ({
                     </div>
                   </div>
                 </div>
-                <div className="flex">
-                  {isProfessor() && (
+                <div className="flex" onClick={(e) => e.stopPropagation()}>
+                  {isProfessorMode && (
                     <Dropdown>
                       <DropdownTrigger>
                         <Button isIconOnly variant="light" radius="full">
@@ -584,6 +760,7 @@ export const CourseMaterials = ({
 
       {renderAddMaterialModal()}
       {renderEditMaterialModal()}
+      {renderItemViewModal()}
     </div>
   );
 };
