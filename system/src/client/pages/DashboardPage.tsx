@@ -556,6 +556,7 @@ export function DashboardPage(): JSX.Element {
           <Card
             className="mb-4 bg-danger-50 border-danger-200 shadow-none"
             radius="lg"
+            style={{ marginBottom: "20px" }}
           >
             <CardBody>
               <p className="text-danger-500">{error}</p>
