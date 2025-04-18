@@ -7,7 +7,7 @@ import {
   getCourseItemById,
   updateCourseItem,
 } from "@/client/services/courseItemService";
-import { getCourseEnrollments } from "@/client/services/enrollmentService";
+import { getMyEnrollments } from "@/client/services/enrollmentService";
 import { formatDueDate } from "@/client/utils/format";
 import { CourseItem } from "@/shared/types/models/courseItem";
 import { Enrollment } from "@/shared/types/models/enrollment";
@@ -181,11 +181,11 @@ export const CourseMaterials = ({
     if (!user || isProfessorMode) return;
 
     try {
-      const response = await getCourseEnrollments(courseId);
+      const response = await getMyEnrollments();
 
       if (response.success && Array.isArray(response.data)) {
         const userEnrollment = response.data.find(
-          (e) => e.student_id === user.id
+          (e) => e.student_id === user.id && e.course_id === courseId
         );
 
         if (userEnrollment) {

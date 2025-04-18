@@ -346,7 +346,7 @@ export const getCourseItemById = async (req: Request, res: Response) => {
       const enrollments = await CourseModel.getEnrollmentsForCourse(courseId);
       const student_ids = enrollments.map((e) => e.student_id);
 
-      if (!(req.user.id in student_ids)) {
+      if (!student_ids.includes(req.user.id)) {
         res.status(403).json({
           success: false,
           message: "You're not enrolled in this course",

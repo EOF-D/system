@@ -311,12 +311,8 @@ export const getQuizResponses = async (req: Request, res: Response) => {
         courseItem.course_id
       );
 
-      const userEnrollment = enrollments.find(
-        (e) =>
-          e.student_id === req.user!.id && e.id === submission.enrollment_id
-      );
-
-      if (!userEnrollment) {
+      const userEnrollments = enrollments.map((e) => e.student_id);
+      if (!userEnrollments.includes(req.user!.id)) {
         res.status(403).json({
           success: false,
           message: "You don't have permission to view these responses",
