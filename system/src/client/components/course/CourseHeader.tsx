@@ -29,6 +29,7 @@ import {
   IconBook,
   IconCalendarTime,
   IconMapPin,
+  IconMenu2,
   IconPlus,
   IconUser,
   IconUserPlus,
@@ -133,6 +134,7 @@ export const CourseHeader = ({
             <Dropdown>
               <DropdownTrigger>
                 <Button variant="flat" color="primary" radius="full" size="sm">
+                  <IconMenu2 size={16} className="mr-2" />
                   Actions
                 </Button>
               </DropdownTrigger>
