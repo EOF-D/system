@@ -64,6 +64,9 @@ export interface TextEditorProps {
 export function TextEditor(props: TextEditorProps): JSX.Element {
   const { isReadOnly, content, ...restProps } = props;
 
+  // Use a key to force re-render when content changes in read-only mode.
+  const contentKey = isReadOnly ? content : "editor";
+
   // Disable pointer events for read-only mode.
   const containerStyle = isReadOnly
     ? {
@@ -109,6 +112,7 @@ export function TextEditor(props: TextEditorProps): JSX.Element {
       {isReadOnly ? (
         <Card className="border-2 border-default-20 shadow-md">
           <RichTextEditor
+            key={contentKey}
             output="html"
             extensions={extensions}
             content={content}

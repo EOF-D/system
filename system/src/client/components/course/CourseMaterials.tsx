@@ -703,7 +703,7 @@ export const CourseMaterials = ({
                     {renderMaterialIcon(item.type)}
                   </div>
                   <div>
-                    <div className="flex gap-2 items-center mb-1">
+                    <div className="flex gap-2 items-center">
                       <h3 className="font-semibold">{item.name}</h3>
                       <Chip
                         size="sm"
@@ -713,14 +713,10 @@ export const CourseMaterials = ({
                         {item.type.charAt(0).toUpperCase() + item.type.slice(1)}
                       </Chip>
                     </div>
-                    {item.description && (
-                      <p className="text-sm text-default-600 mb-1">
-                        {item.description.length > 100
-                          ? item.description.substring(0, 100) + "..."
-                          : item.description}
-                      </p>
-                    )}
-                    <div className="flex items-center gap-2">
+                    <div
+                      className="flex items-center gap-2"
+                      style={{ marginTop: "10px" }}
+                    >
                       <p className="text-xs text-default-500 bg-default-100 px-2 py-1 rounded-full">
                         Due: {formatDueDate(item.due_date)}
                       </p>
