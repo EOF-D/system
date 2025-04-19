@@ -1,6 +1,8 @@
+import { TextEditor } from "@/client/components/TextEditor";
 import { QuizQuestionWithOptions } from "@/shared/types/models/quiz";
-import { Chip, Radio, RadioGroup, Textarea } from "@heroui/react";
+import { Radio, RadioGroup } from "@heroui/react";
 import { IconCheck, IconX } from "@tabler/icons-react";
+import parse from "html-react-parser";
 
 /**
  * QuizQuestion props interface.
@@ -60,10 +62,14 @@ export const QuizQuestion = ({
   return (
     <div className="flex flex-col space-y-4">
       <div className="flex justify-between items-center">
-        <h3 className="text-xl font-semibold mb-2">{question.question_text}</h3>
-        <Chip color="primary" size="sm" variant="flat">
-          {question.points} {question.points === 1 ? "point" : "points"}
-        </Chip>
+        <div className="flex items-center gap-2">
+          <span className="text-default-600">Points:</span>
+          <span className="font-medium">{question.points}</span>
+        </div>
+      </div>
+
+      <div className="bg-default-50 p-4 rounded-lg">
+        {parse(question.question_text)}
       </div>
 
       {question.question_type === "multiple_choice" && question.options && (
@@ -76,9 +82,11 @@ export const QuizQuestion = ({
           {question.options.map((option) => (
             <Radio key={option.id} value={option.id.toString()}>
               <div className="flex items-center gap-2">
-                {option.option_text}
-                {isProfessorMode && !isViewingStudent && option.is_correct && (
+                <span className="text-default-600">{option.option_text}</span>
+                {isProfessorMode && !isViewingStudent && option.is_correct ? (
                   <IconCheck size={18} className="text-success ml-2" />
+                ) : (
+                  <></>
                 )}
                 {isViewingStudent &&
                   response === option.id.toString() &&
@@ -97,24 +105,25 @@ export const QuizQuestion = ({
         <div>
           {isProfessorMode ? (
             <div className="p-4 bg-default-50 rounded-lg">
-              <p className="text-default-600 italic">
-                This is a short answer question. Students will provide their
-                response in a text area.
-              </p>
+              {!isViewingStudent && (
+                <p className="text-default-600 italic">
+                  This is a short answer question. Students will provide their
+                  response in a rich text editor.
+                </p>
+              )}
               {isViewingStudent && response && (
-                <div className="mt-4 p-3 bg-white rounded border border-default-200">
+                <div className="mt-4 p-3 rounded border border-default-200">
                   <p className="font-medium">Student Response:</p>
-                  <p>{response}</p>
+                  {parse(response)}
                 </div>
               )}
             </div>
           ) : (
-            <Textarea
-              placeholder="Type your answer here..."
-              value={response}
-              onChange={(e) => onResponseChange(question.id, e.target.value)}
-              rows={4}
-              isDisabled={isReadOnly}
+            <TextEditor
+              content={response}
+              onChangeContent={(value: string) =>
+                onResponseChange(question.id, value)
+              }
             />
           )}
         </div>

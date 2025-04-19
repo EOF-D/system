@@ -1,3 +1,4 @@
+import { TextEditor } from "@/client/components/TextEditor";
 import { createQuizQuestion } from "@/client/services/quizService";
 import {
   Button,
@@ -10,7 +11,6 @@ import {
   ModalHeader,
   Select,
   SelectItem,
-  Textarea,
 } from "@heroui/react";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { useState } from "react";
@@ -148,9 +148,11 @@ export const QuizQuestionEditor = ({
 
   return (
     <Modal
+      isDismissable={false}
+      isKeyboardDismissDisabled={true}
       isOpen={isOpen}
       onClose={onClose}
-      size="lg"
+      size="5xl"
       radius="lg"
       classNames={{
         backdrop:
@@ -163,16 +165,17 @@ export const QuizQuestionEditor = ({
         </ModalHeader>
         <ModalBody>
           <div className="flex flex-col gap-4">
-            <Textarea
-              label="Question Text"
-              placeholder="Enter your question here..."
-              value={questionData.text}
-              onValueChange={(value) =>
-                setQuestionData({ ...questionData, text: value })
-              }
-              variant="bordered"
-              isRequired
-            />
+            <div className="mb-2">
+              <label className="block text-sm font-medium mb-2">
+                Question Text
+              </label>
+              <TextEditor
+                content={questionData.text}
+                onChangeContent={(value: string) =>
+                  setQuestionData({ ...questionData, text: value })
+                }
+              />
+            </div>
 
             <div className="flex gap-4">
               <div className="flex-1">
