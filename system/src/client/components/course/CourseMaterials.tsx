@@ -690,7 +690,7 @@ export const CourseMaterials = ({
           {courseItems.map((item) => (
             <Card
               key={item.id}
-              className="border-none shadow-sm hover:shadow-md transition-all transform hover:-translate-y-1 bg-gradient-to-r from-white to-default-50 cursor-pointer"
+              className="border-none shadow-sm hover:shadow-md"
               radius="lg"
               isPressable
               onPress={() => handleViewMaterial(item.id)}

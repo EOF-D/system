@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.dark .read-only-wrapper {
+  --richtext-background: hsl(var(--default-100));
+}
+
+.reactjs-tiptap-editor.reactjs-tiptap-editor .ProseMirror.ProseMirror.ProseMirror {
+    padding: 20px;
+}

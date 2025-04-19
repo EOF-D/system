@@ -2,7 +2,6 @@ import { TextEditor } from "@/client/components/TextEditor";
 import { QuizQuestionWithOptions } from "@/shared/types/models/quiz";
 import { Radio, RadioGroup } from "@heroui/react";
 import { IconCheck, IconX } from "@tabler/icons-react";
-import parse from "html-react-parser";
 
 /**
  * QuizQuestion props interface.
@@ -61,16 +60,14 @@ export const QuizQuestion = ({
 }: QuizQuestionProps): JSX.Element => {
   return (
     <div className="flex flex-col space-y-4">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between mb-5">
         <div className="flex items-center gap-2">
           <span className="text-default-600">Points:</span>
           <span className="font-medium">{question.points}</span>
         </div>
       </div>
 
-      <div className="bg-default-50 p-4 rounded-lg">
-        {parse(question.question_text)}
-      </div>
+      <TextEditor content={question.question_text} isReadOnly={true} />
 
       {question.question_type === "multiple_choice" && question.options && (
         <RadioGroup
@@ -114,7 +111,7 @@ export const QuizQuestion = ({
               {isViewingStudent && response && (
                 <div className="mt-4 p-3 rounded border border-default-200">
                   <p className="font-medium">Student Response:</p>
-                  {parse(response)}
+                  <TextEditor content={response} isReadOnly={true} />
                 </div>
               )}
             </div>
