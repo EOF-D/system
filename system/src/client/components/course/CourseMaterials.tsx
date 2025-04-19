@@ -1,4 +1,4 @@
-import { QuizContent } from "@/client/components/course/materials/QuizContent";
+import { QuizContent } from "@/client/components/course/quiz/QuizContent";
 import { useAuth } from "@/client/context/auth";
 import { isProfessor } from "@/client/services/authService";
 import {
