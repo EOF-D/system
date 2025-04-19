@@ -4,32 +4,34 @@ import {
   Bold,
   BulletList,
   Code,
+  CodeBlock,
   Color,
+  FontFamily,
   FontSize,
+  FormatPainter,
   Heading,
+  Highlight,
   Italic,
-  TextAlign,
 } from "reactjs-tiptap-editor/extension-bundle";
 import "reactjs-tiptap-editor/style.css";
 
 const extensions = [
   BaseKit.configure({
-    multiColumn: true,
-    placeholder: {
-      showOnlyCurrent: true,
-    },
     characterCount: {
-      limit: 50_000,
+      limit: 9_000,
     },
   }),
-  Italic,
   Bold,
+  Italic,
   Code,
+  CodeBlock,
   Color,
+  FontFamily,
   FontSize,
-  BulletList,
+  FormatPainter,
   Heading,
-  TextAlign,
+  Highlight,
+  BulletList,
 ];
 
 /**
