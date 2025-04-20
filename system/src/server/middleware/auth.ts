@@ -1,7 +1,7 @@
+import { Config } from "@server/config/config";
+import { logger } from "@shared/utils/logger";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { Config } from "../config/config";
-import { logger } from "../../shared/utils/logger";
 
 /**
  * Checks if the user has the required role.

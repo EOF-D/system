@@ -1,4 +1,3 @@
-import express from "express";
 import {
   createCourse,
   deleteCourse,
@@ -6,7 +5,7 @@ import {
   getCourseEnrollments,
   getCourses,
   updateCourse,
-} from "../controllers/courseController";
+} from "@server/controllers/courseController";
 import {
   createCourseItem,
   deleteCourseItem,
@@ -14,8 +13,9 @@ import {
   getCourseItems,
   getUpcomingItems,
   updateCourseItem,
-} from "../controllers/courseItemController";
-import { professorOnly, protect } from "../middleware/auth";
+} from "@server/controllers/courseItemController";
+import { professorOnly, protect } from "@server/middleware/auth";
+import express from "express";
 
 export const courseRouter = express.Router();
 

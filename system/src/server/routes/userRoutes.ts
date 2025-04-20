@@ -1,4 +1,3 @@
-import express from "express";
 import {
   createUser,
   deleteUser,
@@ -7,8 +6,9 @@ import {
   getUsers,
   loginUser,
   updateUser,
-} from "../controllers/userController";
-import { adminOnly, protect } from "../middleware/auth";
+} from "@server/controllers/userController";
+import { adminOnly, protect } from "@server/middleware/auth";
+import express from "express";
 
 export const userRouter = express.Router();
 

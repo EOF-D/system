@@ -1,11 +1,11 @@
+import { getDb } from "@server/config/database";
 import {
   CreateSubmissionInput,
   Submission,
   SubmissionWithDetails,
   UpdateSubmissionInput,
-} from "../../shared/types/models/submission";
-import { getDb } from "../config/database";
-import { logger } from "../../shared/utils/logger";
+} from "@shared/types/models/submission";
+import { logger } from "@shared/utils/logger";
 
 /**
  * Handles submission-related database operations.

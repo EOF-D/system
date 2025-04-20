@@ -6,8 +6,8 @@ import {
   getMyEnrollments,
   getMyInvitations,
   inviteStudent,
-} from "../controllers/enrollmentController";
-import { professorOnly, protect } from "../middleware/auth";
+} from "@server/controllers/enrollmentController";
+import { professorOnly, protect } from "@server/middleware/auth";
 
 export const enrollmentRouter = express.Router();
 

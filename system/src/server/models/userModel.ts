@@ -1,11 +1,11 @@
-import bcrypt from "bcryptjs";
-import { getDb } from "../config/database";
 import {
   CreateUserInput,
   UpdateUserInput,
   User,
-} from "../../shared/types/models/user";
-import { logger } from "../../shared/utils/logger";
+} from "@/shared/types/models/user";
+import { getDb } from "@server/config/database";
+import { logger } from "@shared/utils/logger";
+import bcrypt from "bcryptjs";
 
 /**
  * Handles user-related database operations.

@@ -1,12 +1,12 @@
-import express from "express";
 import {
   calculateQuizScore,
   createQuizQuestion,
   getQuizQuestions,
   getQuizResponses,
   submitQuizResponse,
-} from "../controllers/quizController";
-import { professorOnly, protect } from "../middleware/auth";
+} from "@server/controllers/quizController";
+import { professorOnly, protect } from "@server/middleware/auth";
+import express from "express";
 
 export const quizRouter = express.Router();
 

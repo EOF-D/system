@@ -1,12 +1,12 @@
-import express from "express";
 import {
   createSubmission,
   getMySubmissions,
   getSubmissionById,
   getSubmissionsByItemId,
   updateSubmission,
-} from "../controllers/submissionController";
-import { professorOnly, protect } from "../middleware/auth";
+} from "@server/controllers/submissionController";
+import { professorOnly, protect } from "@server/middleware/auth";
+import express from "express";
 
 export const submissionRouter = express.Router();
 

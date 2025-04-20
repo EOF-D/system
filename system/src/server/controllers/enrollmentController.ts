@@ -1,7 +1,7 @@
+import { CourseModel } from "@server/models/courseModel";
+import { EnrollmentModel } from "@server/models/enrollmentModel";
+import { logger } from "@shared/utils/logger";
 import { Request, Response } from "express";
-import { CourseModel } from "../models/courseModel";
-import { EnrollmentModel } from "../models/enrollmentModel";
-import { logger } from "../../shared/utils/logger";
 
 /**
  * Invite a student to a course.

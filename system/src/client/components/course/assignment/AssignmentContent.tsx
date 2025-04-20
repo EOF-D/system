@@ -81,13 +81,11 @@ export const AssignmentContent = ({
   const responsesModal = useDisclosure();
 
   const {
-    submissionId,
     submissionContent,
     isSubmitting,
     isCompleted,
     handleContentChange,
     handleSubmitAssignment,
-    refreshSubmission,
   } = useAssignmentSubmission(courseItem, enrollment, onSubmit);
 
   useEffect(() => {

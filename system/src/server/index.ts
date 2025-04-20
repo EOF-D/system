@@ -1,15 +1,15 @@
+import { Config } from "@server/config/config";
+import { initializeDatabase } from "@server/config/database";
+import { baseRouter } from "@server/routes/baseRoutes";
+import { courseRouter } from "@server/routes/courseRoutes";
+import { enrollmentRouter } from "@server/routes/enrollmentRoutes";
+import { quizRouter } from "@server/routes/quizRoutes";
+import { submissionRouter } from "@server/routes/submissionRoutes";
+import { userRouter } from "@server/routes/userRoutes";
+import { logger } from "@shared/utils/logger";
 import cors from "cors";
 import express from "express";
 import morgan from "morgan";
-import { Config } from "./config/config";
-import { initializeDatabase } from "./config/database";
-import { baseRouter } from "./routes/baseRoutes";
-import { courseRouter } from "./routes/courseRoutes";
-import { enrollmentRouter } from "./routes/enrollmentRoutes";
-import { quizRouter } from "./routes/quizRoutes";
-import { submissionRouter } from "./routes/submissionRoutes";
-import { userRouter } from "./routes/userRoutes";
-import { logger } from "../shared/utils/logger";
 
 const app = express();
 const port = Config.port;

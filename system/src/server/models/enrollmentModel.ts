@@ -1,12 +1,12 @@
-import { getDb } from "../config/database";
+import { getDb } from "@server/config/database";
 import {
   CreateEnrollmentInput,
   Enrollment,
   EnrollmentWithCourseDetails,
   EnrollmentWithStudentDetails,
   UpdateEnrollmentStatusInput,
-} from "../../shared/types/models/enrollment";
-import { logger } from "../../shared/utils/logger";
+} from "@shared/types/models/enrollment";
+import { logger } from "@shared/utils/logger";
 
 /**
  * Handles enrollment-related database operations.

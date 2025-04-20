@@ -1,10 +1,10 @@
-import { getDb } from "../config/database";
+import { getDb } from "@server/config/database";
 import {
   CourseItem,
   CreateCourseItemInput,
   UpdateCourseItemInput,
-} from "../../shared/types/models/courseItem";
-import { logger } from "../../shared/utils/logger";
+} from "@shared/types/models/courseItem";
+import { logger } from "@shared/utils/logger";
 
 /**
  * Handles course item-related database operations.

@@ -1,4 +1,4 @@
-import { getDb } from "../config/database";
+import { getDb } from "@server/config/database";
 import {
   CreateQuizQuestionInput,
   CreateQuizResponseInput,
@@ -6,8 +6,8 @@ import {
   QuizQuestion,
   QuizQuestionWithOptions,
   QuizResponse,
-} from "../../shared/types/models/quiz";
-import { logger } from "../../shared/utils/logger";
+} from "@shared/types/models/quiz";
+import { logger } from "@shared/utils/logger";
 
 /**
  * Handles quiz-related database operations.

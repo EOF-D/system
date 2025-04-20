@@ -1,10 +1,10 @@
+import { CourseItemModel } from "@server/models/courseItemModel";
+import { CourseModel } from "@server/models/courseModel";
+import { EnrollmentModel } from "@server/models/enrollmentModel";
+import { QuizModel } from "@server/models/quizModel";
+import { SubmissionModel } from "@server/models/submissionModel";
+import { logger } from "@shared/utils/logger";
 import { Request, Response } from "express";
-import { logger } from "../../shared/utils/logger";
-import { CourseItemModel } from "../models/courseItemModel";
-import { CourseModel } from "../models/courseModel";
-import { EnrollmentModel } from "../models/enrollmentModel";
-import { QuizModel } from "../models/quizModel";
-import { SubmissionModel } from "../models/submissionModel";
 
 /**
  * Create a new quiz question.

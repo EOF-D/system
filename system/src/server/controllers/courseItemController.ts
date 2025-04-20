@@ -1,11 +1,11 @@
-import { Request, Response } from "express";
-import { CourseItemModel } from "../models/courseItemModel";
-import { CourseModel } from "../models/courseModel";
+import { CourseItemModel } from "@server/models/courseItemModel";
+import { CourseModel } from "@server/models/courseModel";
 import {
   CreateCourseItemInput,
   UpdateCourseItemInput,
-} from "../../shared/types/models/courseItem";
-import { logger } from "../../shared/utils/logger";
+} from "@shared/types/models/courseItem";
+import { logger } from "@shared/utils/logger";
+import { Request, Response } from "express";
 
 /**
  * Create a new course item.
