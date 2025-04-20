@@ -101,8 +101,8 @@ export const CourseHeader = ({
         inviteSection
       );
       if (response.success) {
-        setInviteEmail("");
         setInviteSection("01");
+        setInviteEmail("");
         onInviteClose();
         if (onSuccessfulInvite) {
           onSuccessfulInvite();
@@ -241,6 +241,7 @@ export const CourseHeader = ({
                 {inviteError}
               </div>
             )}
+
             <Input
               label="Student Email"
               placeholder="first.last@mymail.champlain.edu"

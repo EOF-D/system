@@ -99,6 +99,7 @@ export function DashboardPage(): JSX.Element {
     days: "",
   });
 
+  const [inviteSection, setInviteSection] = useState("01");
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteLoading, setInviteLoading] = useState(false);
   const [selectedCourse, setSelectedCourse] =
@@ -220,8 +221,13 @@ export function DashboardPage(): JSX.Element {
     setInviteError(null);
 
     try {
-      const response = await inviteStudent(selectedCourse.id, inviteEmail);
+      const response = await inviteStudent(
+        selectedCourse.id,
+        inviteEmail,
+        inviteSection
+      );
       if (response.success) {
+        setInviteSection("01");
         setInviteEmail("");
         onInviteClose();
       } else {
@@ -747,6 +753,16 @@ export function DashboardPage(): JSX.Element {
               type="email"
               isRequired
               description="Enter the student's university email address"
+              variant="bordered"
+              radius="lg"
+            />
+            <Input
+              label="Section"
+              placeholder="01"
+              value={inviteSection}
+              onValueChange={setInviteSection}
+              isRequired
+              description="Enter the section number (e.g., 01, 02)"
               variant="bordered"
               radius="lg"
             />

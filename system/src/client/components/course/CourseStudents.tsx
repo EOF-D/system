@@ -63,6 +63,7 @@ export const CourseStudents = ({
   } = useDisclosure();
 
   const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteSection, setInviteSection] = useState("01");
   const [inviteLoading, setInviteLoading] = useState(false);
   const [inviteError, setInviteError] = useState<string | null>(null);
 
@@ -73,8 +74,13 @@ export const CourseStudents = ({
     setInviteError(null);
 
     try {
-      const response = await inviteStudent(courseId, inviteEmail);
+      const response = await inviteStudent(
+        courseId,
+        inviteEmail,
+        inviteSection
+      );
       if (response.success) {
+        setInviteSection("01");
         setInviteEmail("");
         onInviteClose();
         if (onInviteSuccess) {
@@ -123,6 +129,16 @@ export const CourseStudents = ({
               type="email"
               isRequired
               description="Enter the student's email address"
+              variant="bordered"
+              radius="lg"
+            />
+            <Input
+              label="Section"
+              placeholder="01"
+              value={inviteSection}
+              onValueChange={setInviteSection}
+              isRequired
+              description="Enter the section number (e.g., 01, 02)"
               variant="bordered"
               radius="lg"
             />

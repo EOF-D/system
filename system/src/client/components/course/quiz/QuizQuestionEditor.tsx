@@ -149,7 +149,6 @@ export const QuizQuestionEditor = ({
   return (
     <Modal
       isDismissable={false}
-      isKeyboardDismissDisabled={true}
       isOpen={isOpen}
       onClose={onClose}
       size="5xl"
