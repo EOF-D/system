@@ -1,4 +1,4 @@
-import { QuizContent } from "@/client/components/course/quiz/QuizContent";
+import { CourseContent } from "@/client/components/course/CourseContent";
 import { useAuth } from "@/client/context/auth";
 import { isProfessor } from "@/client/services/authService";
 import {
@@ -560,6 +560,7 @@ export const CourseMaterials = ({
   const renderItemViewModal = () => {
     return (
       <Modal
+        isDismissable={false}
         isOpen={itemViewDisclosure.isOpen}
         onClose={handleCloseItemView}
         size="5xl"
@@ -623,27 +624,12 @@ export const CourseMaterials = ({
                       </Button>
                     </div>
                   ) : (
-                    <>
-                      {selectedItem.type === "quiz" ? (
-                        <QuizContent
-                          courseItem={selectedItem}
-                          enrollment={enrollment!}
-                          onSubmit={handleRefresh}
-                          onRefresh={handleRefresh}
-                        />
-                      ) : selectedItem.type === "document" ? (
-                        <div className="p-4 text-center text-default-500">
-                          <p>Document content is not available yet.</p>
-                        </div>
-                      ) : (
-                        <div className="p-4 text-center text-default-500">
-                          <p>
-                            Content for {selectedItem.type} is not available
-                            yet.
-                          </p>
-                        </div>
-                      )}
-                    </>
+                    <CourseContent
+                      courseItem={selectedItem}
+                      enrollment={enrollment!}
+                      onSubmit={handleRefresh}
+                      onRefresh={handleRefresh}
+                    />
                   )}
                 </ModalBody>
               </>
@@ -703,7 +689,7 @@ export const CourseMaterials = ({
                     {renderMaterialIcon(item.type)}
                   </div>
                   <div>
-                    <div className="flex gap-2 items-center">
+                    <div className="flex gap-2 items-center mb-5">
                       <h3 className="font-semibold">{item.name}</h3>
                       <Chip
                         size="sm"
@@ -713,10 +699,7 @@ export const CourseMaterials = ({
                         {item.type.charAt(0).toUpperCase() + item.type.slice(1)}
                       </Chip>
                     </div>
-                    <div
-                      className="flex items-center gap-2"
-                      style={{ marginTop: "10px" }}
-                    >
+                    <div className="flex items-center gap-2">
                       <p className="text-xs text-default-500 bg-default-100 px-2 py-1 rounded-full">
                         Due: {formatDueDate(item.due_date)}
                       </p>

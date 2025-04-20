@@ -215,7 +215,8 @@ export const CourseStudents = ({
                       variant="flat"
                       radius="full"
                     >
-                      {enrollment.status}
+                      {enrollment.status.charAt(0).toUpperCase() +
+                        enrollment.status.slice(1)}
                     </Chip>
                   </TableCell>
                   <TableCell>

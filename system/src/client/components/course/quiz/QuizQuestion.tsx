@@ -109,7 +109,7 @@ export const QuizQuestion = ({
                 </p>
               )}
               {isViewingStudent && response && (
-                <div className="mt-4 p-3 rounded border border-default-200">
+                <div>
                   <p className="font-medium">Student Response:</p>
                   <TextEditor content={response} isReadOnly={true} />
                 </div>

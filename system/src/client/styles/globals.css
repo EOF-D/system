@@ -9,3 +9,7 @@
 .reactjs-tiptap-editor.reactjs-tiptap-editor .ProseMirror.ProseMirror.ProseMirror {
   padding: 20px;
 }
+
+.richtext-outline-1 {
+  outline-width: 0px;
+}

@@ -18,7 +18,7 @@ import "reactjs-tiptap-editor/style.css";
 const extensions = [
   BaseKit.configure({
     characterCount: {
-      limit: 9_000,
+      limit: 10_000,
     },
   }),
   Bold,
@@ -110,7 +110,7 @@ export function TextEditor(props: TextEditorProps): JSX.Element {
       style={containerStyle}
     >
       {isReadOnly ? (
-        <Card className="border-2 border-default-20 shadow-md">
+        <Card className="border border-default-200 shadow-md">
           <RichTextEditor
             key={contentKey}
             output="html"
