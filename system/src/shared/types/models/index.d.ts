@@ -7,10 +7,10 @@ import {
 } from "./course";
 
 import {
+  CreateEnrollmentInput,
   Enrollment,
   EnrollmentWithCourseDetails,
   EnrollmentWithStudentDetails,
-  CreateEnrollmentInput,
   UpdateEnrollmentStatusInput,
 } from "./enrollment";
 
@@ -22,24 +22,31 @@ import {
 } from "./courseItem";
 
 import {
+  CreateQuizQuestionInput,
+  CreateQuizResponseInput,
   QuizOption,
   QuizQuestion,
   QuizQuestionWithOptions,
   QuizResponse,
-  CreateQuizQuestionInput,
-  CreateQuizResponseInput,
 } from "../quiz";
 
 import {
+  CreateSubmissionInput,
   Submission,
   SubmissionWithDetails,
-  CreateSubmissionInput,
   UpdateSubmissionInput,
 } from "../submission";
 
 import {
-  User,
-  UserWithDetails,
   CreateUserInput,
   UpdateUserInput,
+  User,
+  UserWithDetails,
 } from "./user";
+
+import {
+  Grade,
+  GradeInput,
+  GradeWithItemDetails,
+  GradeWithStudentDetails,
+} from "./grade";

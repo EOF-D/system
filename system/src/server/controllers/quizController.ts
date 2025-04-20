@@ -1,6 +1,7 @@
 import { CourseItemModel } from "@server/models/courseItemModel";
 import { CourseModel } from "@server/models/courseModel";
 import { EnrollmentModel } from "@server/models/enrollmentModel";
+import { GradeModel } from "@server/models/gradeModel";
 import { QuizModel } from "@server/models/quizModel";
 import { SubmissionModel } from "@server/models/submissionModel";
 import { logger } from "@shared/utils/logger";
@@ -400,16 +401,24 @@ export const calculateQuizScore = async (req: Request, res: Response) => {
     }
 
     // Calculate the score.
-    const score = await QuizModel.calculateScore(submissionId);
+    const totalPoints = await QuizModel.calculateScore(submissionId);
 
-    // Update the item grade.
-    // TODO: Implement grade updating.
+    // Update the submission status.
+    await SubmissionModel.update(submissionId, { status: "graded" });
+
+    // Create or update the grade record.
+    const grade = await GradeModel.createOrUpdateGrade({
+      enrollment_id: submission.enrollment_id,
+      item_id: submission.item_id,
+      points_earned: totalPoints,
+    });
 
     res.status(200).json({
       success: true,
       data: {
         submission_id: submissionId,
-        score,
+        points_earned: totalPoints,
+        grade: grade,
       },
       message: "Quiz scored successfully",
     });

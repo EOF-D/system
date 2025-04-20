@@ -1,4 +1,3 @@
-import express from "express";
 import {
   acceptInvitation,
   declineInvitation,
@@ -8,6 +7,7 @@ import {
   inviteStudent,
 } from "@server/controllers/enrollmentController";
 import { professorOnly, protect } from "@server/middleware/auth";
+import express from "express";
 
 export const enrollmentRouter = express.Router();
 
