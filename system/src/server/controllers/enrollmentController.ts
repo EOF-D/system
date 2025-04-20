@@ -15,7 +15,7 @@ export const inviteStudent = async (req: Request, res: Response) => {
   }
 
   try {
-    const { course_id, student_email } = req.body;
+    const { course_id, student_email, section = "01" } = req.body;
     if (!course_id || !student_email) {
       res.status(400).json({
         success: false,
@@ -29,7 +29,8 @@ export const inviteStudent = async (req: Request, res: Response) => {
     const enrollment = await EnrollmentModel.inviteByEmail(
       course_id,
       student_email,
-      req.user.id
+      req.user.id,
+      section
     );
 
     if (!enrollment) {

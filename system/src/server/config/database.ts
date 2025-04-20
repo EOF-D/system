@@ -96,6 +96,7 @@ export async function initializeDatabase() {
       student_id INTEGER NOT NULL, 
       course_id INTEGER NOT NULL, 
 
+      section TEXT DEFAULT '01',
       final_grade TEXT, -- NULL until course is completed.
       enrollment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
       status TEXT DEFAULT 'active' CHECK (

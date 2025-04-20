@@ -38,11 +38,13 @@ export interface EnrollmentResponse {
  * Invite a student to a course.
  * @param {number} id - The ID of the course.
  * @param {string} studentEmail - The email of the student to invite.
+ * @param {string} section - The section of the course (default is "01").
  * @returns {Promise<EnrollmentResponse>} Promise with the invitation response.
  */
 export const inviteStudent = async (
   id: number,
-  studentEmail: string
+  studentEmail: string,
+  section: string = "01"
 ): Promise<EnrollmentResponse> => {
   try {
     const response = await fetch(`${API_URL}/invite`, {
@@ -54,6 +56,7 @@ export const inviteStudent = async (
       body: JSON.stringify({
         course_id: id,
         student_email: studentEmail,
+        section: section,
       }),
     });
 

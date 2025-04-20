@@ -143,12 +143,14 @@ export class EnrollmentModel {
    * @param {number} courseId - The ID of the course.
    * @param {string} email - The email of the student to invite.
    * @param {number} professorId - The ID of the professor sending the invitation.
+   * @param {string} section - The section of the course.
    * @returns {Promise<Enrollment | null>} The created enrollment or null if student not found.
    */
   static async inviteByEmail(
     courseId: number,
     email: string,
-    professorId: number
+    professorId: number,
+    section: string = "01"
   ): Promise<Enrollment | null> {
     logger.info(`Inviting student by email: ${email}`);
     const db = await getDb();
@@ -195,9 +197,9 @@ export class EnrollmentModel {
       // Create enrollment with "pending" status.
       const result = await db.run(
         `INSERT INTO enrollments (
-          course_id, student_id, status, enrollment_date
-        ) VALUES (?, ?, 'pending', CURRENT_TIMESTAMP)`,
-        [courseId, student.id]
+          course_id, student_id, section, status, enrollment_date
+        ) VALUES (?, ?, ?, 'pending', CURRENT_TIMESTAMP)`,
+        [courseId, student.id, section]
       );
 
       // Get the created enrollment.

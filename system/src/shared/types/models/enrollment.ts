@@ -21,6 +21,12 @@ export interface Enrollment {
   student_id: number;
 
   /**
+   * The section of the course. (e.g., "01", "02", "03")
+   * @type {string}
+   */
+  section: string;
+
+  /**
    * The final grade (if course is completed).
    * @type {string | undefined}
    */
@@ -97,6 +103,12 @@ export interface EnrollmentWithStudentDetails extends Enrollment {
    * @type {string}
    */
   student_email: string;
+
+  /**
+   * The section of the course. (e.g., "01", "02", "03")
+   * @type {string}
+   */
+  section: string;
 }
 
 /**
@@ -114,6 +126,12 @@ export interface CreateEnrollmentInput {
    * @type {number}
    */
   student_id: number;
+
+  /**
+   * The section of the course. (e.g., "01", "02", "03")
+   * @type {string}
+   */
+  section: string;
 
   /**
    * The enrollment status.

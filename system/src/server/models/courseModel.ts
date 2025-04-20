@@ -299,6 +299,7 @@ export class CourseModel {
         `
         SELECT 
           c.*,
+          e.section,
           e.final_grade,
           p.first_name as professor_first_name,
           p.last_name as professor_last_name,

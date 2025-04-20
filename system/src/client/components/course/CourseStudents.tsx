@@ -184,6 +184,7 @@ export const CourseStudents = ({
             <TableHeader>
               <TableColumn>NAME</TableColumn>
               <TableColumn>EMAIL</TableColumn>
+              <TableColumn>SECTION</TableColumn>
               <TableColumn>STATUS</TableColumn>
               <TableColumn>JOINED</TableColumn>
             </TableHeader>
@@ -205,6 +206,16 @@ export const CourseStudents = ({
                   </TableCell>
                   <TableCell className="text-default-600">
                     {enrollment.student_email}
+                  </TableCell>
+                  <TableCell>
+                    <Chip
+                      size="sm"
+                      color="primary"
+                      variant="flat"
+                      radius="full"
+                    >
+                      {enrollment.section || "01"}
+                    </Chip>
                   </TableCell>
                   <TableCell>
                     <Chip

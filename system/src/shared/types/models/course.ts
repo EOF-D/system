@@ -78,6 +78,12 @@ export interface CourseWithProfessor extends Course {
    * @type {string}
    */
   professor_full_name: string;
+
+  /**
+   * Section of the course (e.g., "01", "02", "03").
+   * @type {string}
+   */
+  section: string;
 }
 
 /**

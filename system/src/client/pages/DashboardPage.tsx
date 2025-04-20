@@ -352,7 +352,8 @@ export function DashboardPage(): JSX.Element {
                 <CardBody>
                   <div className="flex flex-col gap-1">
                     <h3 className="text-lg font-semibold">
-                      {invitation.course_prefix}-{invitation.course_number}
+                      {invitation.course_prefix}-{invitation.course_number}-
+                      {invitation.section}
                     </h3>
                     <p className="text-default-600">{invitation.course_name}</p>
                     <div className="flex items-center gap-1 text-default-500 mt-1">
@@ -426,7 +427,16 @@ export function DashboardPage(): JSX.Element {
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
               <h3 className="text-lg font-bold text-primary-500">
-                {course.prefix}-{course.number}: {course.name}
+                {isStudentCourse(course) ? (
+                  <p>
+                    {course.prefix}-{course.number}-{course.section || "01"}:{" "}
+                    {course.name}
+                  </p>
+                ) : (
+                  <p>
+                    {course.prefix}-{course.number}: {course.name}
+                  </p>
+                )}
               </h3>
               {isStudentCourse(course) && (
                 <Chip size="sm" variant="flat" color="primary" radius="full">

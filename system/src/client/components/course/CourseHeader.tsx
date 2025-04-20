@@ -83,6 +83,7 @@ export const CourseHeader = ({
     onClose: onInviteClose,
   } = useDisclosure();
   const { user } = useAuth();
+  const [inviteSection, setInviteSection] = useState("01");
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteLoading, setInviteLoading] = useState(false);
   const [inviteError, setInviteError] = useState<string | null>(null);
@@ -94,9 +95,14 @@ export const CourseHeader = ({
     setInviteError(null);
 
     try {
-      const response = await inviteStudent(course.id, inviteEmail);
+      const response = await inviteStudent(
+        course.id,
+        inviteEmail,
+        inviteSection
+      );
       if (response.success) {
         setInviteEmail("");
+        setInviteSection("01");
         onInviteClose();
         if (onSuccessfulInvite) {
           onSuccessfulInvite();
@@ -127,7 +133,16 @@ export const CourseHeader = ({
           <div className="flex items-center gap-2">
             <h1 className="text-xl font-bold">
               <span className="rounded-md">
-                {course.prefix}-{course.number}: {course.name}
+                {isStudentCourse(course) ? (
+                  <p>
+                    {course.prefix}-{course.number}-{course.section || "01"}:{" "}
+                    {course.name}
+                  </p>
+                ) : (
+                  <p>
+                    {course.prefix}-{course.number}: {course.name}
+                  </p>
+                )}
               </span>
             </h1>
           </div>
@@ -217,7 +232,7 @@ export const CourseHeader = ({
         <ModalContent>
           <ModalHeader>
             <h3 className="text-xl">
-              Invite students to {course.prefix} {course.number}
+              Invite students to {course.prefix}-{course.number}
             </h3>
           </ModalHeader>
           <ModalBody>
@@ -234,6 +249,16 @@ export const CourseHeader = ({
               type="email"
               isRequired
               description="Enter the student's university email address"
+              variant="bordered"
+              radius="lg"
+            />
+            <Input
+              label="Section"
+              placeholder="01"
+              value={inviteSection}
+              onValueChange={setInviteSection}
+              isRequired
+              description="Enter the section number (e.g., 01, 02)"
               variant="bordered"
               radius="lg"
             />
