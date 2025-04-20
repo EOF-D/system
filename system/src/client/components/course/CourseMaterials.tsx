@@ -1,4 +1,5 @@
 import { CourseContent } from "@/client/components/course/CourseContent";
+import { TextEditor } from "@/client/components/TextEditor";
 import { useAuth } from "@/client/context/auth";
 import { isProfessor } from "@/client/services/authService";
 import {
@@ -30,7 +31,6 @@ import {
   Select,
   SelectItem,
   Spinner,
-  Textarea,
   useDisclosure,
 } from "@heroui/react";
 import {
@@ -208,7 +208,7 @@ export const CourseMaterials = ({
         max_points:
           materialForm.type === "document" ? 0 : materialForm.max_points,
         due_date: materialForm.due_date,
-        description: materialForm.description,
+        description: materialForm.description || "",
       };
 
       const response = await createCourseItem(courseId, itemData);
@@ -329,9 +329,10 @@ export const CourseMaterials = ({
   const renderAddMaterialModal = () => {
     return (
       <Modal
+        isDismissable={false}
         isOpen={addDisclosure.isOpen}
         onClose={addDisclosure.onClose}
-        size="lg"
+        size="5xl"
         classNames={{
           backdrop:
             "bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20",
@@ -358,18 +359,14 @@ export const CourseMaterials = ({
                 variant="bordered"
                 radius="lg"
               />
-              <Textarea
-                isRequired
-                label="Description"
-                placeholder="Brief description of the material"
-                value={materialForm.description}
-                onValueChange={(value) =>
-                  setMaterialForm({ ...materialForm, description: value })
-                }
-                variant="bordered"
-                radius="lg"
-                minRows={3}
-              />
+              {materialForm.type !== "quiz" && (
+                <TextEditor
+                  content={materialForm.description}
+                  onChangeContent={(value: string) =>
+                    setMaterialForm({ ...materialForm, description: value })
+                  }
+                />
+              )}
               <div className="grid grid-cols-2 gap-4">
                 <Select
                   label="Material Type"
@@ -447,9 +444,10 @@ export const CourseMaterials = ({
   const renderEditMaterialModal = () => {
     return (
       <Modal
+        isDismissable={false}
         isOpen={editDisclosure.isOpen}
         onClose={editDisclosure.onClose}
-        size="lg"
+        size="5xl"
         classNames={{
           backdrop:
             "bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20",
@@ -475,20 +473,18 @@ export const CourseMaterials = ({
                 radius="lg"
                 className="mb-2"
               />
-              <Textarea
-                label="Description"
-                placeholder="Brief description of the material"
-                value={materialForm.description}
-                onValueChange={(value) =>
-                  setMaterialForm({ ...materialForm, description: value })
-                }
-                variant="bordered"
-                radius="lg"
-                minRows={3}
-              />
+              {materialForm.type !== "quiz" && (
+                <TextEditor
+                  content={materialForm.description}
+                  onChangeContent={(value: string) =>
+                    setMaterialForm({ ...materialForm, description: value })
+                  }
+                />
+              )}
               <div className="grid grid-cols-2 gap-4">
-                <select
-                  className="border rounded-lg p-2"
+                <Select
+                  label="Material Type"
+                  placeholder="Document"
                   value={materialForm.type}
                   onChange={(e) =>
                     setMaterialForm({
@@ -499,11 +495,12 @@ export const CourseMaterials = ({
                         | "quiz",
                     })
                   }
+                  variant="bordered"
                 >
-                  <option value="document">Document</option>
-                  <option value="assignment">Assignment</option>
-                  <option value="quiz">Quiz</option>
-                </select>
+                  <SelectItem key="document">Document</SelectItem>
+                  <SelectItem key="assignment">Assignment</SelectItem>
+                  <SelectItem key="quiz">Quiz</SelectItem>
+                </Select>
                 {materialForm.type !== "document" && (
                   <Input
                     type="number"
