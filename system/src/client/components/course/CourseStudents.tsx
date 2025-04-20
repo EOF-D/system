@@ -1,10 +1,12 @@
-import { formatDate } from "@/client/utils/format";
 import { inviteStudent } from "@/client/services/enrollmentService";
+import { formatDate } from "@/client/utils/format";
+import { EnrollmentWithStudentDetails } from "@/shared/types/models/enrollment";
 import {
   Avatar,
   Button,
   Card,
   Chip,
+  Divider,
   Input,
   Modal,
   ModalBody,
@@ -17,12 +19,10 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-  Divider,
   useDisclosure,
 } from "@heroui/react";
 import { IconUserPlus } from "@tabler/icons-react";
 import { useState } from "react";
-import { EnrollmentWithStudentDetails } from "@/shared/types/models/enrollment";
 
 /**
  * CourseStudents props interface.

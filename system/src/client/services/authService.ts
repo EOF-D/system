@@ -1,8 +1,8 @@
 import { SiteConfig } from "@/client/config/config";
 import {
-  User,
   CreateUserInput,
   UpdateUserInput,
+  User,
 } from "@shared/types/models/user";
 
 const API_URL = `${SiteConfig.apiUrl}/users`;

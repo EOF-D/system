@@ -1,10 +1,10 @@
 import { SiteConfig } from "@/client/config/config";
 import {
+  CreateQuizQuestionInput,
+  CreateQuizResponseInput,
   QuizQuestion,
   QuizQuestionWithOptions,
   QuizResponse as QuizResponseType,
-  CreateQuizQuestionInput,
-  CreateQuizResponseInput,
 } from "@shared/types/models/quiz";
 
 const API_URL = `${SiteConfig.apiUrl}/quizzes`;

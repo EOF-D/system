@@ -12,7 +12,7 @@ import {
   CourseWithProfessor,
 } from "@/shared/types/models/course";
 import { CourseItem } from "@/shared/types/models/courseItem";
-import { Button, Spinner, Tab, Tabs, Card, useDisclosure } from "@heroui/react";
+import { Button, Card, Spinner, Tab, Tabs, useDisclosure } from "@heroui/react";
 import { IconFileText, IconUsers } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";

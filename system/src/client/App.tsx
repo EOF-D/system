@@ -1,7 +1,7 @@
+import { CoursePage } from "@/client/pages/CoursePage";
+import { DashboardPage } from "@/client/pages/DashboardPage";
 import { IndexPage } from "@/client/pages/IndexPage";
 import { ProfilePage } from "@/client/pages/ProfilePage";
-import { DashboardPage } from "@/client/pages/DashboardPage";
-import { CoursePage } from "@/client/pages/CoursePage";
 import { Route, Routes } from "react-router-dom";
 
 /**

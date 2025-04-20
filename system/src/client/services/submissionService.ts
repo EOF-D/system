@@ -1,8 +1,8 @@
 import { SiteConfig } from "@/client/config/config";
 import {
+  CreateSubmissionInput,
   Submission,
   SubmissionWithDetails,
-  CreateSubmissionInput,
   UpdateSubmissionInput,
 } from "@shared/types/models/submission";
 
