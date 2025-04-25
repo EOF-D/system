@@ -309,12 +309,6 @@ export class GradeModel {
         letterGrade = "F";
       }
 
-      // Update the enrollment's final grade.
-      await db.run(`UPDATE enrollments SET final_grade = ? WHERE id = ?`, [
-        letterGrade,
-        enrollment.id,
-      ]);
-
       return letterGrade;
     } finally {
       await db.close();

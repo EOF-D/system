@@ -335,7 +335,7 @@ export class CourseModel {
       const enrollments = await db.all<Enrollment[]>(
         `
         SELECT 
-          e.id as enrollment_id,
+          e.id,
           e.course_id,
           e.student_id,
           e.final_grade,

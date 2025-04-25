@@ -1,3 +1,4 @@
+import { useAuth } from "@/client/context/auth";
 import {
   finalizeGradesForCourse,
   getGradesByItemId,
@@ -12,29 +13,25 @@ import {
   GradeWithItemDetails,
 } from "@/shared/types/models/grade";
 import { User } from "@/shared/types/models/user";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 /**
  * Custom hook for managing grades functionality.
  * Provides methods to grade submissions, fetch grades, and finalize course grades.
  */
 export function useGrades() {
+  const { user } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [studentGrades, setStudentGrades] = useState<GradeWithItemDetails[]>(
-    []
-  );
-
-  const [itemGrades, setItemGrades] = useState<GradeWithItemDetails[]>([]);
-  const [myGrades, setMyGrades] = useState<{
+  const [courseGrades, setCourseGrades] = useState<{
     grades: GradeWithItemDetails[];
-    ungraded_items: CourseItem[];
-    final_grade: string | null;
+    ungradedItems: CourseItem[];
+    finalGrade: string | null;
   }>({
     grades: [],
-    ungraded_items: [],
-    final_grade: null,
+    ungradedItems: [],
+    finalGrade: null,
   });
 
   const [studentData, setStudentData] = useState<{
@@ -45,190 +42,188 @@ export function useGrades() {
     grades: [],
   });
 
-  const [finalizedGrades, setFinalizedGrades] = useState<
-    { student_id: number; final_grade: string }[]
-  >([]);
-
   /**
    * Grade a student's submission.
    * @param gradeData The grade data to submit.
-   * @returns A promise that resolves when the grade is submitted.
    */
-  const submitGrade = async (gradeData: GradeInput): Promise<Grade | null> => {
-    setLoading(true);
-    setError(null);
+  const submitGrade = useCallback(
+    async (gradeData: GradeInput): Promise<Grade | null> => {
+      setLoading(true);
+      setError(null);
 
-    try {
-      const response = await gradeSubmission(gradeData);
-
-      if (response.success && response.data) {
-        return response.data as Grade;
-      } else {
-        setError(response.message || "Failed to submit grade");
+      try {
+        const response = await gradeSubmission(gradeData);
+        if (response.success && response.data) {
+          return response.data as Grade;
+        } else {
+          setError(response.message || "Failed to submit grade");
+          return null;
+        }
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : "Grading error";
+        setError(errorMessage);
         return null;
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "An error occurred while submitting the grade";
-      setError(errorMessage);
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    []
+  );
 
   /**
-   * Get all grades for a specific student in a course.
-   * @param courseId The ID of the course.
-   * @param studentId The ID of the student.
+   * Fetch grades for a specific student in a course.
+   * @param courseId The course ID.
+   * @param studentId The student ID.
    */
-  const fetchStudentGradesForCourse = async (
-    courseId: number,
-    studentId: number
-  ): Promise<void> => {
-    setLoading(true);
-    setError(null);
+  const fetchStudentGrades = useCallback(
+    async (courseId: number, studentId: number): Promise<void> => {
+      setLoading(true);
+      setError(null);
 
-    try {
-      const response = await getStudentGradesForCourse(courseId, studentId);
+      try {
+        const response = await getStudentGradesForCourse(courseId, studentId);
+        if (response.success && response.data) {
+          const data = response.data as {
+            student: User;
+            grades: GradeWithItemDetails[];
+          };
 
-      if (response.success && response.data) {
-        const data = response.data as {
-          student: User;
-          grades: GradeWithItemDetails[];
-        };
-
-        setStudentGrades(data.grades);
-        setStudentData(data);
-      } else {
-        setError(response.message || "Failed to fetch student grades");
+          setStudentData(data);
+        } else {
+          setError(response.message || "Failed to fetch student grades");
+        }
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : "Error fetching grades";
+        setError(errorMessage);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "An error occurred while fetching student grades";
-      setError(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    []
+  );
 
   /**
-   * Get all grades for a specific course item.
-   * @param itemId The ID of the course item.
+   * Fetch all grades for a specific course item.
+   * @param itemId The course item ID.
    */
-  const fetchGradesByItemId = async (itemId: number): Promise<void> => {
-    setLoading(true);
-    setError(null);
+  const fetchItemGrades = useCallback(
+    async (itemId: number): Promise<GradeWithItemDetails[] | null> => {
+      setLoading(true);
+      setError(null);
 
-    try {
-      const response = await getGradesByItemId(itemId);
-
-      if (response.success && response.data) {
-        setItemGrades(response.data as GradeWithItemDetails[]);
-      } else {
-        setError(response.message || "Failed to fetch grades for this item");
+      try {
+        const response = await getGradesByItemId(itemId);
+        if (response.success && response.data) {
+          const grades = response.data as GradeWithItemDetails[];
+          return grades;
+        } else {
+          setError(response.message || "Failed to fetch grades for this item");
+          return null;
+        }
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : "Error fetching item grades";
+        setError(errorMessage);
+        return null;
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "An error occurred while fetching item grades";
-      setError(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    []
+  );
 
   /**
-   * Get the current student's grades for a course.
-   * @param courseId The ID of the course.
+   * Fetch the current student's grades for a course.
+   * @param courseId The course ID.
    */
-  const fetchMyGradesForCourse = async (courseId: number): Promise<void> => {
-    setLoading(true);
-    setError(null);
+  const fetchMyGrades = useCallback(
+    async (courseId: number): Promise<void> => {
+      if (!user) return;
 
-    try {
-      const response = await getMyGradesForCourse(courseId);
+      setLoading(true);
+      setError(null);
 
-      if (response.success && response.data) {
-        const data = response.data as {
-          grades: GradeWithItemDetails[];
-          ungraded_items: CourseItem[];
-          final_grade: string | null;
-        };
+      try {
+        const response = await getMyGradesForCourse(courseId);
+        if (response.success && response.data) {
+          const data = response.data as {
+            grades: GradeWithItemDetails[];
+            ungraded_items: CourseItem[];
+            final_grade: string | null;
+          };
 
-        setMyGrades(data);
-      } else {
-        setError(response.message || "Failed to fetch your grades");
+          setCourseGrades({
+            grades: data.grades,
+            ungradedItems: data.ungraded_items,
+            finalGrade: data.final_grade,
+          });
+        } else {
+          setError(response.message || "Failed to fetch your grades");
+        }
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : "Error fetching grades";
+        setError(errorMessage);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "An error occurred while fetching your grades";
-      setError(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [user]
+  );
 
   /**
-   * Calculate and finalize grades for all students in a course.
-   * @param courseId The ID of the course.
+   * Finalize grades for all students in a course.
+   * @param courseId The course ID.
    */
-  const finalizeGrades = async (courseId: number): Promise<void> => {
-    setLoading(true);
-    setError(null);
+  const finalizeGrades = useCallback(
+    async (courseId: number): Promise<void> => {
+      setLoading(true);
+      setError(null);
 
-    try {
-      const response = await finalizeGradesForCourse(courseId);
-      if (response.success && response.data) {
-        setFinalizedGrades(
-          response.data as { student_id: number; final_grade: string }[]
-        );
-      } else {
-        setError(response.message || "Failed to finalize grades");
+      try {
+        const response = await finalizeGradesForCourse(courseId);
+        if (!response.success) {
+          setError(response.message || "Failed to finalize grades");
+        }
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : "Error finalizing grades";
+        setError(errorMessage);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "An error occurred while finalizing grades";
-      setError(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    []
+  );
 
   /**
-   * Calculate the percentage grade for a student.
-   * @param grades The student's grades.
-   * @returns The percentage grade (0-100).
+   * Calculate percentage grade from a set of grades.
+   * @param grades List of grades with max points.
    */
-  const calculatePercentage = (grades: GradeWithItemDetails[]): number => {
-    if (!grades || grades.length === 0) return 0;
+  const calculatePercentage = useCallback(
+    (grades: GradeWithItemDetails[]): number => {
+      if (!grades || grades.length === 0) return 0;
 
-    let totalPoints = 0;
-    let earnedPoints = 0;
+      let totalPoints = 0;
+      let earnedPoints = 0;
 
-    grades.forEach((grade) => {
-      totalPoints += grade.max_points;
-      earnedPoints += grade.points_earned;
-    });
+      grades.forEach((grade) => {
+        totalPoints += grade.max_points;
+        earnedPoints += grade.points_earned;
+      });
 
-    return totalPoints > 0 ? (earnedPoints / totalPoints) * 100 : 0;
-  };
+      return totalPoints > 0 ? (earnedPoints / totalPoints) * 100 : 0;
+    },
+    []
+  );
 
   /**
-   * Get a letter grade based on a percentage.
-   * @param percentage The percentage grade (0-100).
-   * @returns The letter grade (A, B, C, etc.).
+   * Convert percentage to letter grade.
+   * @param percentage Percentage score (0-100).
    */
-  const getLetterGrade = (percentage: number): string => {
+  const getLetterGrade = useCallback((percentage: number): string => {
     if (percentage >= 93) return "A";
     if (percentage >= 90) return "A-";
     if (percentage >= 87) return "B+";
@@ -241,44 +236,20 @@ export function useGrades() {
     if (percentage >= 63) return "D";
     if (percentage >= 60) return "D-";
     return "F";
-  };
-
-  /**
-   * Reset all state data.
-   */
-  const resetState = () => {
-    setStudentGrades([]);
-    setItemGrades([]);
-    setMyGrades({
-      grades: [],
-      ungraded_items: [],
-      final_grade: null,
-    });
-    setStudentData({
-      student: null,
-      grades: [],
-    });
-    setFinalizedGrades([]);
-    setError(null);
-  };
+  }, []);
 
   return {
     loading,
     error,
-    studentGrades,
-    itemGrades,
-    myGrades,
+    courseGrades,
     studentData,
-    finalizedGrades,
 
     submitGrade,
-    fetchStudentGradesForCourse,
-    fetchGradesByItemId,
-    fetchMyGradesForCourse,
+    fetchStudentGrades,
+    fetchItemGrades,
+    fetchMyGrades,
     finalizeGrades,
-
     calculatePercentage,
     getLetterGrade,
-    resetState,
   };
 }

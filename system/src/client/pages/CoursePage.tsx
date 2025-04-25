@@ -1,3 +1,4 @@
+import { CourseGrades } from "@/client/components/course/CourseGrades";
 import { CourseHeader } from "@/client/components/course/CourseHeader";
 import { CourseMaterials } from "@/client/components/course/CourseMaterials";
 import { CourseStudents } from "@/client/components/course/CourseStudents";
@@ -13,7 +14,7 @@ import {
 } from "@/shared/types/models/course";
 import { CourseItem } from "@/shared/types/models/courseItem";
 import { Button, Card, Spinner, Tab, Tabs, useDisclosure } from "@heroui/react";
-import { IconFileText, IconUsers } from "@tabler/icons-react";
+import { IconChecklist, IconFileText, IconUsers } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -101,6 +102,10 @@ export function CoursePage(): JSX.Element {
     }
   };
 
+  const handleGradesChange = () => {
+    fetchCourseData();
+  };
+
   if (!isLoggedIn || !user) {
     return (
       <Layout page="Course">
@@ -175,6 +180,23 @@ export function CoursePage(): JSX.Element {
                   isLoading={isItemsLoading}
                   onItemsChange={fetchCourseItems}
                   modalDisclosure={materialDisclosure}
+                />
+              </Tab>
+
+              <Tab
+                key="grades"
+                title={
+                  <div className="flex items-center gap-2 p-2">
+                    <IconChecklist size={18} />
+                    <span>Grades</span>
+                  </div>
+                }
+              >
+                <CourseGrades
+                  courseId={courseId}
+                  courseItems={courseItems}
+                  isLoading={isItemsLoading}
+                  onGradesChange={handleGradesChange}
                 />
               </Tab>
 
